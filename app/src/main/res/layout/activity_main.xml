@@ -9,27 +9,29 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/NBABlue">
         android:theme="@style/Theme.CS4518project1.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.CS4518project1.PopupOverlay" />
+            android:layout_height="40dp"
+            android:background="@color/NBABlue" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="397dp"
-            android:layout_height="61dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
             android:text="BasketBall Counter"
+            android:textColor="#FFFFFF"
             android:textSize="38sp"
             android:translationX="10dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        android:id ="@+id/include2"
+        android:id="@+id/include2"
         layout="@layout/content_main" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -39,7 +41,8 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@android:drawable/ic_dialog_email"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -50,53 +53,145 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="121dp"
+            android:layout_height="161dp"
             android:orientation="horizontal"
-            android:translationY="85dp">
+            android:translationY="150dp">
 
             <TextView
                 android:id="@+id/textView4"
-                android:layout_width="195dp"
+                android:layout_width="82dp"
                 android:layout_height="wrap_content"
                 android:text="Team A"
-                android:translationX="90dp"
+                android:textAlignment="viewStart"
+                android:textSize="20sp"
+                android:translationX="80dp"
                 android:translationY="100dp" />
 
             <TextView
                 android:id="@+id/textView3"
-                android:layout_width="149dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Team B"
-                android:translationX="50dp"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:translationX="170dp"
                 android:translationY="100dp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="330dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:translationY="150dp">
 
             <TextView
                 android:id="@+id/textView6"
-                android:layout_width="wrap_content"
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:autoText="true"
                 android:text="0"
                 android:textSize="60sp"
-                android:translationX="90dp" />
+                android:translationX="100dp" />
 
             <TextView
                 android:id="@+id/textView7"
-                android:layout_width="wrap_content"
+                android:layout_width="135dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="0"
                 android:textSize="60sp"
-                android:translationX="50dp" />
+                android:translationX="130dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="216dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button3a"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/NBARed"
+                android:insetLeft="30dp"
+                android:text="+3 Points"
+                android:translationY="160dp"
+                android:layout_width="wrap_content" />
+
+            <Button
+                android:id="@+id/button3b"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/NBARed"
+                android:insetLeft="30dp"
+                android:insetRight="30dp"
+                android:text="+3 Points"
+                android:translationY="160dp"
+                android:layout_width="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="78dp"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button2a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/NBARed"
+                android:insetLeft="30dp"
+                android:text="+2 Points"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <Button
+                android:id="@+id/button2b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/NBARed"
+                android:insetLeft="30dp"
+                android:insetRight="30dp"
+                android:text="+2 Points" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/FreeThrowA"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/NBARed"
+                android:insetLeft="30dp"
+                android:text="Free Throw"
+                tools:ignore="DuplicateSpeakableTextCheck" />
+
+            <Button
+                android:id="@+id/FreeThrowB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/NBARed"
+                android:insetLeft="30dp"
+                android:insetRight="30dp"
+                android:text="Free Throw" />
         </LinearLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="511dp"
+        android:orientation="horizontal"></LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
