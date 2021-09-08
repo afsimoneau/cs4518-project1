@@ -1,6 +1,7 @@
 package com.example.cs4518_project1
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -15,16 +16,17 @@ import android.widget.Toast
 import com.example.cs4518_project1.databinding.ActivityMainBinding
 import org.w3c.dom.Text
 
-class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+//view
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        var model: Team = initTeam() //;initalizing Teams at 0,0
+        var view = MainActivity()
+        var controller = TeamController(model, view)
         var button3a = findViewById<Button>(R.id.button3a)
         var button3b = findViewById<Button>(R.id.button3b)
         var button2b = findViewById<Button>(R.id.button2b)
@@ -34,59 +36,61 @@ class MainActivity : AppCompatActivity() {
         var ResetButt = findViewById<Button>(R.id.ResetButt)
         val TeamBScore: TextView = findViewById(R.id.TeamBScore)
         val TeamAScore = findViewById<TextView>(R.id.TeamAScore)
+        var score: Int
+        controller.setScoreA(0);
+        controller.setScoreB(0);
 
         button3a.setOnClickListener{
-            var num: Int = Integer.valueOf(TeamAScore.getText().toString())
-            num += 3
-            TeamAScore.text = num.toString()
+            score = controller.getScoreA() + 3
+            controller.setScoreA(score)
+            TeamAScore.text = score.toString()
         }
         button2a.setOnClickListener{
-            var num: Int = Integer.valueOf(TeamAScore.getText().toString())
-            num += 2
-            TeamAScore.text = num.toString()
+            score = controller.getScoreA() + 2
+            controller.setScoreA(score)
+            TeamAScore.text = score.toString()
         }
         FreeThrowA.setOnClickListener{
-            var num: Int = Integer.valueOf(TeamAScore.getText().toString())
-            num += 1
-            TeamAScore.text = num.toString()
+            score = controller.getScoreA() + 1
+            controller.setScoreA(score)
+            TeamAScore.text = score.toString()
         }
         button3b.setOnClickListener{
-            var num: Int = Integer.valueOf(TeamBScore.getText().toString())
-            num += 3
-            TeamBScore.text = num.toString()
+            score = controller.getScoreB() + 3
+            controller.setScoreB(score)
+            TeamBScore.text = model.ScoreB.toString()
         }
+
         button2b.setOnClickListener{
-            var num: Int = Integer.valueOf(TeamBScore.getText().toString())
-            num += 2
-            TeamBScore.text = num.toString()
+            score = controller.getScoreB() + 2
+            controller.setScoreB(score)
+            TeamBScore.text = score.toString()
         }
         FreeThrowB.setOnClickListener{
-            var num: Int = Integer.valueOf(TeamBScore.getText().toString())
-            num += 1
-            TeamBScore.text = num.toString()
+            score = controller.getScoreB() + 1
+            controller.setScoreB(score)
+            TeamBScore.text = score.toString()
+
         }
         ResetButt.setOnClickListener{
+            controller.setScoreA(0);
+            controller.setScoreB(0);
             TeamAScore.text = "0"
             TeamBScore.text = "0"
+
         }
 
+    }
+    fun initTeam(): Team {
+        return Team (0,0)
+    }
+    fun printDetails(scoreA: Int, scoreB: Int) {
+        Log.d("TeamA","Score"+scoreA)
+        Log.d("TeamB","Score"+scoreB)
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+
 
 }
