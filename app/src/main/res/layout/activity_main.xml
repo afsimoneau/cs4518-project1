@@ -43,29 +43,29 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="136dp"
+            android:layout_height="110dp"
             android:orientation="horizontal"
             android:translationY="150dp">
 
             <TextView
                 android:id="@+id/TeamAText"
-                android:layout_width="82dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Team A"
-                android:textAlignment="viewStart"
+                android:textAlignment="center"
                 android:textSize="20sp"
-                android:translationX="80dp"
-                android:translationY="100dp" />
+                android:translationX="60dp"
+                android:translationY="50dp" />
 
             <TextView
                 android:id="@+id/TeamBText"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Team B"
                 android:textAlignment="center"
                 android:textSize="20sp"
-                android:translationX="170dp"
-                android:translationY="100dp" />
+                android:translationX="130dp"
+                android:translationY="50dp" />
 
         </LinearLayout>
 
@@ -174,6 +174,16 @@
                 android:text="Free Throw" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/NameGenerator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/NBABlue"
+            android:insetLeft="80dp"
+            android:insetRight="80dp"
+            android:text="Team Name Generator"
+            android:translationY="30dp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -185,14 +195,16 @@
 
         <Button
             android:id="@+id/ResetButt"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:layout_weight="1"
             android:backgroundTint="@color/NBABlue"
             android:insetLeft="60dp"
             android:insetRight="60dp"
             android:text="Reset"
-            android:translationY="580dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:translationY="640dp"
             app:iconPadding="50dp" />
     </LinearLayout>
 
