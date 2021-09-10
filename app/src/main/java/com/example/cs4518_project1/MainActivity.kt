@@ -5,13 +5,29 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 
 
 //view
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: TeamViewModel
+
+    private lateinit var button3a: Button
+    private lateinit var button3b: Button
+    private lateinit var button2a: Button
+    private lateinit var button2b: Button
+    private lateinit var freeThrowA: Button
+    private lateinit var freeThrowB: Button
+    private lateinit var resetButt: Button
+    private lateinit var teamBScore: TextView
+    private lateinit var teamAScore: TextView
+    private lateinit var teamAText: TextView
+    private lateinit var teamBText: TextView
+    private lateinit var nameGenerator: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        //TODO: save team scores in ViewModel
+        //TODO: save team scores in a ViewModel
         //TODO: clean up layouts/views in activity_main and activity_landscape
         super.onCreate(savedInstanceState)
         val orientation = resources.configuration.orientation
@@ -22,72 +38,88 @@ class MainActivity : AppCompatActivity() {
             setContentView(R.layout.activity_landscape)
         }
 
-
-        val model: Team = initTeam() //;initializing Teams at 0,0
+        viewModel = ViewModelProvider(this)[TeamViewModel::class.java]
         val view = MainActivity()
-        val controller = TeamController(model, view)
-        val button3a = findViewById<Button>(R.id.button3a)
-        val button3b = findViewById<Button>(R.id.button3b)
-        val button2b = findViewById<Button>(R.id.button2b)
-        val button2a = findViewById<Button>(R.id.button2a)
-        val freeThrowB = findViewById<Button>(R.id.FreeThrowB)
-        val freeThrowA = findViewById<Button>(R.id.FreeThrowA)
-        val resetButt = findViewById<Button>(R.id.ResetButt)
-        val teamBScore: TextView = findViewById(R.id.TeamBScore)
-        val teamAScore = findViewById<TextView>(R.id.TeamAScore)
-        val teamAText = findViewById<TextView>(R.id.TeamAText)
-        val teamBText = findViewById<TextView>(R.id.TeamBText)
-        val nameGenerator = findViewById<Button>(R.id.NameGenerator)
+        val controller = TeamController(viewModel, view)
 
-        if(savedInstanceState != null){
-            teamAText.text = savedInstanceState.getString("teamA")
-            teamBText.text = savedInstanceState.getString("teamB")
+        if (savedInstanceState != null) {
+            viewModel.TeamAName = savedInstanceState.getString("teamA").toString()
+            viewModel.TeamBName = savedInstanceState.getString("teamB").toString()
+        } else {
+            viewModel.TeamAName = "Team A"
+            viewModel.TeamBName = "Team B"
         }
-        var score: Int
 
-        button3a.setOnClickListener{
-            score = controller.getScoreA() + 3
+        button3a = findViewById(R.id.button3a)
+        button3b = findViewById(R.id.button3b)
+        button2a = findViewById(R.id.button2a)
+        button2b = findViewById(R.id.button2b)
+        freeThrowB = findViewById(R.id.FreeThrowB)
+        freeThrowA = findViewById(R.id.FreeThrowA)
+        resetButt = findViewById(R.id.ResetButt)
+
+        teamAScore = findViewById<TextView>(R.id.TeamAScore).apply {
+            text = viewModel.ScoreA.toString()
+        }
+
+        teamBScore = findViewById<TextView>(R.id.TeamBScore).apply {
+            text = viewModel.ScoreB.toString()
+        }
+
+        teamAText = findViewById<TextView>(R.id.TeamAText).apply {
+            text = viewModel.TeamAName
+        }
+
+        teamBText = findViewById<TextView>(R.id.TeamBText).apply {
+            text = viewModel.TeamBName
+        }
+
+        nameGenerator = findViewById(R.id.NameGenerator)
+
+        setListeners(controller)
+    }
+
+    private fun setListeners(controller: TeamController){
+        button3a.setOnClickListener {
+            val score: Int = controller.getScoreA() + 3
             controller.setScoreA(score)
-            teamAScore.text = score.toString()
+            teamAScore.text=viewModel.ScoreA.toString()
         }
-        button2a.setOnClickListener{
-            score = controller.getScoreA() + 2
+        button2a.setOnClickListener {
+            val score: Int = controller.getScoreA() + 2
             controller.setScoreA(score)
-            teamAScore.text = score.toString()
+            teamAScore.text=viewModel.ScoreA.toString()
         }
-        freeThrowA.setOnClickListener{
-            score = controller.getScoreA() + 1
+        freeThrowA.setOnClickListener {
+            val score: Int = controller.getScoreA() + 1
             controller.setScoreA(score)
-            teamAScore.text = score.toString()
+            teamAScore.text=viewModel.ScoreA.toString()
         }
-        button3b.setOnClickListener{
-            score = controller.getScoreB() + 3
+        button3b.setOnClickListener {
+            val score: Int = controller.getScoreB() + 3
             controller.setScoreB(score)
-            teamBScore.text = model.ScoreB.toString()
+            teamBScore.text=viewModel.ScoreB.toString()
         }
-
-        button2b.setOnClickListener{
-            score = controller.getScoreB() + 2
+        button2b.setOnClickListener {
+            val score: Int = controller.getScoreB() + 2
             controller.setScoreB(score)
-            teamBScore.text = score.toString()
+            teamBScore.text=viewModel.ScoreB.toString()
         }
-        freeThrowB.setOnClickListener{
-            score = controller.getScoreB() + 1
+        freeThrowB.setOnClickListener {
+            val score: Int = controller.getScoreB() + 1
             controller.setScoreB(score)
-            teamBScore.text = score.toString()
-
+            teamBScore.text=viewModel.ScoreB.toString()
         }
-        nameGenerator.setOnClickListener{
-            val teamA = controller.nameGenerator()
-            val teamB = controller.nameGenerator()
+        nameGenerator.setOnClickListener {
+            val teamA : String = controller.nameGenerator()
+            val teamB : String = controller.nameGenerator()
             controller.setTeamAName(teamA)
             controller.setTeamBName(teamB)
-            teamAText.text = teamA
-            teamBText.text= teamB
+            teamAText.text = viewModel.TeamAName
+            teamBText.text = viewModel.TeamBName
         }
 
-
-        resetButt.setOnClickListener{
+        resetButt.setOnClickListener {
             controller.setScoreA(0)
             controller.setScoreB(0)
             controller.setTeamAName("Team A")
@@ -97,25 +129,16 @@ class MainActivity : AppCompatActivity() {
             teamAScore.text = "0"
             teamBScore.text = "0"
         }
-
     }
 
-    private fun initTeam(): Team {
-        return Team ("Team A","Team B", 0,0)
-    }
-    fun printDetails(nameA:String, nameB:String, scoreA: Int, scoreB: Int) {
-        Log.d(nameA,"Score"+scoreA)
-        Log.d(nameB,"Score"+scoreB)
-
+    fun printDetails(nameA: String, nameB: String, scoreA: Int, scoreB: Int) {
+        Log.d(nameA, "Score$scoreA")
+        Log.d(nameB, "Score$scoreB")
     }
 
-    override fun onSaveInstanceState(outState: Bundle, model: Team) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("teamA",model.TeamAName)
-        outState.putString("teamB",model.TeamBName)
+        outState.putString("teamA", viewModel.TeamAName)
+        outState.putString("teamB", viewModel.TeamBName)
     }
-
-
-
-
 }

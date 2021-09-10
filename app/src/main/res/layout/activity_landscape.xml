@@ -1,189 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+<layout>
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/NBABlue">
-        android:theme="@style/Theme.CS4518project1.AppBarOverlay">
+    <data>
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="397dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-black"
-            android:text="BasketBall Counter"
-            android:textColor="#FFFFFF"
-            android:textSize="38sp"
-            android:translationX="10dp" />
+        <variable
+            name="teamViewModel"
+            type="com.example.cs4518_project1.TeamViewModel" />
+    </data>
 
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:screenOrientation="landscape"
+        tools:context=".MainActivity">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/TeamAText"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Team A"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                android:translationX="242dp"
-                android:translationY="60dp" />
-
-            <TextView
-                android:id="@+id/TeamBText"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Team B"
-                android:textAlignment="center"
-                android:textSize="20sp"
-                android:translationX="242dp"
-                android:translationY="60dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:translationY="150dp">
+            android:background="@color/NBABlue">
+            android:theme="@style/Theme.CS4518project1.AppBarOverlay">
 
             <TextView
-                android:id="@+id/TeamAScore"
-                android:layout_width="15dp"
+                android:id="@+id/textView"
+                android:layout_width="397dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0"
-                android:textSize="60sp"
-                android:translationX="100dp" />
+                android:fontFamily="sans-serif-black"
+                android:text="BasketBall Counter"
+                android:textColor="#FFFFFF"
+                android:textSize="38sp"
+                android:translationX="10dp" />
 
-            <TextView
-                android:id="@+id/TeamBScore"
-                android:layout_width="135dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="0"
-                android:textSize="60sp"
-                android:translationX="130dp" />
-        </LinearLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="205dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button3a"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/NBARed"
-                android:insetLeft="30dp"
-                android:text="+3 Points"
-                android:translationY="160dp" />
-
-            <Button
-                android:id="@+id/button3b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/NBARed"
-                android:insetLeft="30dp"
-                android:insetRight="30dp"
-                android:text="+3 Points"
-                android:translationY="160dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button2a"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/NBARed"
-                android:insetLeft="30dp"
-                android:text="+2 Points"/>
-
-            <Button
-                android:id="@+id/button2b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/NBARed"
-                android:insetLeft="30dp"
-                android:insetRight="30dp"
-                android:text="+2 Points"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/FreeThrowA"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/NBARed"
-                android:insetLeft="30dp"
-                android:text="Free Throw"
-                tools:ignore="DuplicateSpeakableTextCheck" />
-
-            <Button
-                android:id="@+id/FreeThrowB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/NBARed"
-                android:insetLeft="30dp"
-                android:insetRight="30dp"
-                android:text="Free Throw" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/NameGenerator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/NBABlue"
-            android:insetLeft="80dp"
-            android:insetRight="80dp"
-            android:text="Team Name Generator"
-            android:translationY="30dp" />
-        <Button
-            android:id="@+id/ResetButt"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:backgroundTint="@color/NBABlue"
-            android:insetLeft="60dp"
-            android:insetRight="60dp"
-            android:text="Reset"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            android:translationY="100dp"
-            app:iconPadding="50dp" />
-    </LinearLayout>
+            android:orientation="vertical">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/TeamAText"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Team A"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:translationX="242dp"
+                    android:translationY="60dp" />
+
+                <TextView
+                    android:id="@+id/TeamBText"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Team B"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:translationX="242dp"
+                    android:translationY="60dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:translationY="150dp">
+
+                <TextView
+                    android:id="@+id/TeamAScore"
+                    android:layout_width="15dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0"
+                    android:textSize="60sp"
+                    android:translationX="100dp" />
+
+                <TextView
+                    android:id="@+id/TeamBScore"
+                    android:layout_width="135dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0"
+                    android:textSize="60sp"
+                    android:translationX="130dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="205dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button3a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/NBARed"
+                    android:insetLeft="30dp"
+                    android:text="+3 Points"
+                    android:translationY="160dp" />
+
+                <Button
+                    android:id="@+id/button3b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/NBARed"
+                    android:insetLeft="30dp"
+                    android:insetRight="30dp"
+                    android:text="+3 Points"
+                    android:translationY="160dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button2a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/NBARed"
+                    android:insetLeft="30dp"
+                    android:text="+2 Points" />
+
+                <Button
+                    android:id="@+id/button2b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/NBARed"
+                    android:insetLeft="30dp"
+                    android:insetRight="30dp"
+                    android:text="+2 Points"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/FreeThrowA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/NBARed"
+                    android:insetLeft="30dp"
+                    android:text="Free Throw"
+                    tools:ignore="DuplicateSpeakableTextCheck" />
+
+                <Button
+                    android:id="@+id/FreeThrowB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/NBARed"
+                    android:insetLeft="30dp"
+                    android:insetRight="30dp"
+                    android:text="Free Throw" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/NameGenerator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/NBABlue"
+                android:insetLeft="80dp"
+                android:insetRight="80dp"
+                android:text="Team Name Generator"
+                android:translationY="30dp" />
+
+            <Button
+                android:id="@+id/ResetButt"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/NBABlue"
+                android:insetLeft="60dp"
+                android:insetRight="60dp"
+                android:text="Reset"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:translationY="100dp"
+                app:iconPadding="50dp" />
+        </LinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
