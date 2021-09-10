@@ -1,6 +1,5 @@
 package com.example.cs4518_project1
 
-import android.os.Bundle
 import kotlin.random.Random
 
 class TeamController(var model: Team, var view: MainActivity ) {
@@ -78,8 +77,7 @@ class TeamController(var model: Team, var view: MainActivity ) {
         )
         val randomIndexC = Random.nextInt(color.size)
         val randomIndexA = Random.nextInt(animal.size)
-        val final = color[randomIndexC] + " " + animal[randomIndexA]
-        return final
+        return color[randomIndexC] + " " + animal[randomIndexA]
 
     }
 }

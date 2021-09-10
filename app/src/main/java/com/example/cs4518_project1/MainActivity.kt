@@ -1,8 +1,6 @@
 package com.example.cs4518_project1
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
@@ -16,7 +14,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val orientation = resources.configuration.orientation
 
-        setContentView(R.layout.activity_main)
+        if (orientation == 1) {
+            setContentView(R.layout.activity_main)
+        } else {
+            setContentView(R.layout.activity_landscape)
+        }
 
 
         val model: Team = initTeam() //;initializing Teams at 0,0
