@@ -11,6 +11,8 @@ import android.widget.TextView
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //TODO: save team scores in ViewModel
+        //TODO: clean up layouts/views in activity_main and activity_landscape
         super.onCreate(savedInstanceState)
         val orientation = resources.configuration.orientation
 
@@ -38,11 +40,8 @@ class MainActivity : AppCompatActivity() {
         val nameGenerator = findViewById<Button>(R.id.NameGenerator)
 
         if(savedInstanceState != null){
-            teamAText.text = savedInstanceState.getString(model.TeamAName)
-            teamBText.text = savedInstanceState.getString(model.TeamBName)
-            teamAScore.text = savedInstanceState.getString(model.ScoreA.toString())
-            teamBScore.text = savedInstanceState.getString(model.ScoreB.toString())
-
+            teamAText.text = savedInstanceState.getString("teamA")
+            teamBText.text = savedInstanceState.getString("teamB")
         }
         var score: Int
 
@@ -110,9 +109,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle, model: Team) {
         super.onSaveInstanceState(outState)
-
+        outState.putString("teamA",model.TeamAName)
+        outState.putString("teamB",model.TeamBName)
     }
 
 
