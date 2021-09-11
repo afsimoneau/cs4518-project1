@@ -187,29 +187,18 @@
                 android:insetRight="80dp"
                 android:text="Team Name Generator"
                 android:translationY="30dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_anchor="@+id/linearLayout"
-            app:layout_anchorGravity="center">
-
             <Button
                 android:id="@+id/ResetButt"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_weight="1"
                 android:backgroundTint="@color/NBABlue"
                 android:insetLeft="60dp"
                 android:insetRight="60dp"
                 android:text="Reset"
                 android:textAllCaps="true"
                 android:textStyle="bold"
-                android:translationY="580dp"
-                app:iconPadding="50dp" />
+                android:translationY="30dp"/>
+
         </LinearLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
