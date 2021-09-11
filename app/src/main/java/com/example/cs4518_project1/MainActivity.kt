@@ -84,31 +84,42 @@ class MainActivity : AppCompatActivity() {
             val score: Int = controller.getScoreA() + 3
             controller.setScoreA(score)
             teamAScore.text=viewModel.ScoreA.toString()
+            Log.d(viewModel.TeamAName,"+3 points")
         }
         button2a.setOnClickListener {
             val score: Int = controller.getScoreA() + 2
             controller.setScoreA(score)
             teamAScore.text=viewModel.ScoreA.toString()
+            Log.d(viewModel.TeamAName,"+2 points")
+
         }
         freeThrowA.setOnClickListener {
             val score: Int = controller.getScoreA() + 1
             controller.setScoreA(score)
             teamAScore.text=viewModel.ScoreA.toString()
+            Log.d(viewModel.TeamAName,"+1 point")
+
         }
         button3b.setOnClickListener {
             val score: Int = controller.getScoreB() + 3
             controller.setScoreB(score)
             teamBScore.text=viewModel.ScoreB.toString()
+            Log.d(viewModel.TeamBName,"+3 points")
+
         }
         button2b.setOnClickListener {
             val score: Int = controller.getScoreB() + 2
             controller.setScoreB(score)
             teamBScore.text=viewModel.ScoreB.toString()
+            Log.d(viewModel.TeamBName,"+2 points")
+
         }
         freeThrowB.setOnClickListener {
             val score: Int = controller.getScoreB() + 1
             controller.setScoreB(score)
             teamBScore.text=viewModel.ScoreB.toString()
+            Log.d(viewModel.TeamBName,"+1 point")
+
         }
         nameGenerator.setOnClickListener {
             val teamA : String = controller.nameGenerator()
@@ -117,6 +128,8 @@ class MainActivity : AppCompatActivity() {
             controller.setTeamBName(teamB)
             teamAText.text = viewModel.TeamAName
             teamBText.text = viewModel.TeamBName
+            Log.d("NameGenerator", "Team names generated")
+
         }
 
         resetButt.setOnClickListener {
@@ -128,12 +141,8 @@ class MainActivity : AppCompatActivity() {
             teamBText.text = "Team B"
             teamAScore.text = "0"
             teamBScore.text = "0"
+            Log.d("ResetButt", "Reset button clicked")
         }
-    }
-
-    fun printDetails(nameA: String, nameB: String, scoreA: Int, scoreB: Int) {
-        Log.d(nameA, "Score$scoreA")
-        Log.d(nameB, "Score$scoreB")
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

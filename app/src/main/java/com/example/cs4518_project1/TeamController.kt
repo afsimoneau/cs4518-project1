@@ -35,10 +35,6 @@ class TeamController(var teamViewModel: TeamViewModel, var view: MainActivity ) 
         teamViewModel.TeamBName = nameB
     }
 
-    fun updateView() {
-        view.printDetails(teamViewModel.TeamAName, teamViewModel.TeamBName, teamViewModel.ScoreA, teamViewModel.ScoreB)
-    }
-
     fun nameGenerator(): String {
         val color = listOf(
             "black",

@@ -200,7 +200,7 @@
             <Button
                 android:id="@+id/ResetButt"
                 android:layout_width="0dp"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/NBABlue"
                 android:insetLeft="60dp"
@@ -208,7 +208,7 @@
                 android:text="Reset"
                 android:textAllCaps="true"
                 android:textStyle="bold"
-                android:translationY="620dp"
+                android:translationY="580dp"
                 app:iconPadding="50dp" />
         </LinearLayout>
 
