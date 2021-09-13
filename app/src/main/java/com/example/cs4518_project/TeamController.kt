@@ -1,4 +1,4 @@
-package com.example.cs4518_project1
+package com.example.cs4518_project
 
 import kotlin.random.Random
 

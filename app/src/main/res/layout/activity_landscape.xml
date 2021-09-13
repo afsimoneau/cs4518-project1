@@ -7,7 +7,7 @@
 
         <variable
             name="teamViewModel"
-            type="com.example.cs4518_project1.TeamViewModel" />
+            type="com.example.cs4518_project.TeamViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
