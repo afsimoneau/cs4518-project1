@@ -10,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CS4518projects">
         <activity
-            android:name="com.example.cs4518_project.MainActivity"
+            android:name=".ClickSave"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.CS4518projects.NoActionBar">

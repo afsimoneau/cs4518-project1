@@ -6,9 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import android.content.Intent
+import android.view.View
+import android.widget.EditText
 
 
 //view
+val scoreA = "scoreA.MESSAGE"
+val scoreB = "scoreB.MESSAGE"
+val teamAName = "TeamAName.MESSAGE"
+val teamBName = "TeamBName.MESSAGE"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: TeamViewModel
@@ -24,7 +31,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var teamAScore: TextView
     private lateinit var teamAText: TextView
     private lateinit var teamBText: TextView
-    private lateinit var nameGenerator: Button
+    private lateinit var save: Button
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO: save team scores in a ViewModel
@@ -74,10 +84,20 @@ class MainActivity : AppCompatActivity() {
             text = viewModel.TeamBName
         }
 
-        nameGenerator = findViewById(R.id.NameGenerator)
-
         setListeners(controller)
     }
+
+    fun clickSave(view: View){
+         val intent = Intent(this, ClickSave::class.java)
+            intent.putExtra(scoreA, viewModel.ScoreA.toString())
+            intent.putExtra(scoreB, viewModel.ScoreB.toString())
+            intent.putExtra(teamBName, viewModel.TeamBName)
+            intent.putExtra(teamAName, viewModel.TeamAName)
+        startActivity(intent)
+
+    }
+
+
 
     private fun setListeners(controller: TeamController){
         button3a.setOnClickListener {
@@ -121,7 +141,7 @@ class MainActivity : AppCompatActivity() {
             Log.d(viewModel.TeamBName,"+1 point")
 
         }
-        nameGenerator.setOnClickListener {
+      /*  nameGenerator.setOnClickListener {
             val teamA : String = controller.nameGenerator()
             val teamB : String = controller.nameGenerator()
             controller.setTeamAName(teamA)
@@ -131,6 +151,9 @@ class MainActivity : AppCompatActivity() {
             Log.d("NameGenerator", "Team names generated")
 
         }
+
+
+       */
 
         resetButt.setOnClickListener {
             controller.setScoreA(0)
