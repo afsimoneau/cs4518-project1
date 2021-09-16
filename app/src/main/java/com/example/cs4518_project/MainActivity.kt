@@ -12,10 +12,10 @@ import android.widget.EditText
 
 
 //view
-val scoreA = "scoreA.MESSAGE"
-val scoreB = "scoreB.MESSAGE"
-val teamAName = "TeamAName.MESSAGE"
-val teamBName = "TeamBName.MESSAGE"
+const val scoreA = "scoreA.MESSAGE"
+const val scoreB = "scoreB.MESSAGE"
+const val teamAName = "TeamAName.MESSAGE"
+const val teamBName = "TeamBName.MESSAGE"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: TeamViewModel
