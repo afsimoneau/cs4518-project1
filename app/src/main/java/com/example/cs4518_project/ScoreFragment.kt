@@ -1,34 +1,28 @@
 package com.example.cs4518_project
 
-import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil.setContentView
+import androidx.recyclerview.widget.RecyclerView
+import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import android.content.Intent
-import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 
-//view
-const val scoreA = "scoreA.MESSAGE"
-const val scoreB = "scoreB.MESSAGE"
-const val teamAName = "TeamAName.MESSAGE"
-const val teamBName = "TeamBName.MESSAGE"
-const val REQUEST = 1 // The request code
-
-
-
-class MainActivity : AppCompatActivity() {
-    val fragmentManager= supportFragmentManager
-
-    /*
+class ScoreFragment : Fragment() {
+    private lateinit var displayButton: Button
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
     private lateinit var viewModel: TeamViewModel
@@ -46,39 +40,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var save: Button
 
 
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-        //TODO: save team scores in a ViewModel
-        //TODO: clean up layouts/views in activity_main and activity_landscape
-        super.onCreate(savedInstanceState)
-        val orientation = resources.configuration.orientation
-        if (orientation == 1) {
-            setContentView(R.layout.activity_main)
-        } else {
-            setContentView(R.layout.activity_landscape)
-        }
-        if(findViewById<FrameLayout>(R.id.framelayout) != null){
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.add(R.id.framelayout, ScoreFragment())
-            fragmentTransaction.commit()
-        }
-
-
-        /*
-
-        layoutManager = LinearLayoutManager(this)
-        adapter = RecyclerAdapter()
-
-
-
-
-
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_score, container, false)
         viewModel = ViewModelProvider(this)[TeamViewModel::class.java]
-        val view = MainActivity()
-        val controller = TeamController(viewModel, view)
+        val MainActivity = MainActivity()
+        val controller = TeamController(viewModel, MainActivity) //idk if i can just passin MainActivity like this...
+        val orientation = resources.configuration.orientation
+        /* if (orientation == 1) {
+            setContentView(MainActivity, R.layout.activity_main)
+        } else {
+            setContentView(MainActivity, R.layout.activity_landscape)
+        }
 
+        */
         if (savedInstanceState != null) {
             viewModel.TeamAName = savedInstanceState.getString("teamA").toString()
             viewModel.TeamBName = savedInstanceState.getString("teamB").toString()
@@ -87,34 +65,45 @@ class MainActivity : AppCompatActivity() {
             viewModel.TeamBName = "Team B"
         }
 
-        button3a = findViewById(R.id.button3a)
-        button3b = findViewById(R.id.button3b)
-        button2a = findViewById(R.id.button2a)
-        button2b = findViewById(R.id.button2b)
-        freeThrowB = findViewById(R.id.FreeThrowB)
-        freeThrowA = findViewById(R.id.FreeThrowA)
-        resetButt = findViewById(R.id.ResetButt)
+        button3a = view.findViewById(R.id.button3a)
+        button3b = view.findViewById(R.id.button3b)
+        button2a = view.findViewById(R.id.button2a)
+        button2b = view.findViewById(R.id.button2b)
+        freeThrowB = view.findViewById(R.id.FreeThrowB)
+        freeThrowA = view.findViewById(R.id.FreeThrowA)
+        resetButt = view.findViewById(R.id.ResetButt)
 
-        teamAScore = findViewById<TextView>(R.id.TeamAScore).apply {
+        displayButton = view.findViewById(R.id.displayButton)
+        save = view.findViewById(R.id.Save)
+
+        displayButton.setOnClickListener {
+            Log.d("log", "buttonWorking")
+        }
+        save.setOnClickListener {
+            Log.d("log", "savebuttonWorking")
+
+        }
+        teamAScore = view.findViewById<TextView>(R.id.TeamAScore).apply {
             text = viewModel.ScoreA.toString()
         }
 
-        teamBScore = findViewById<TextView>(R.id.TeamBScore).apply {
+        teamBScore = view.findViewById<TextView>(R.id.TeamBScore).apply {
             text = viewModel.ScoreB.toString()
         }
 
-        teamAText = findViewById<TextView>(R.id.TeamAText).apply {
+        teamAText = view.findViewById<TextView>(R.id.TeamAText).apply {
             text = viewModel.TeamAName
         }
 
-        teamBText = findViewById<TextView>(R.id.TeamBText).apply {
+        teamBText = view.findViewById<TextView>(R.id.TeamBText).apply {
             text = viewModel.TeamBName
         }
 
-        setListeners(controller)
-    }
+        setListeners(controller )
+        return view
 
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int,data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -131,63 +120,48 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-    private fun setListeners(controller: TeamController){
+    private fun setListeners(controller: TeamController) {
         button3a.setOnClickListener {
             val score: Int = controller.getScoreA() + 3
             controller.setScoreA(score)
-            teamAScore.text=viewModel.ScoreA.toString()
-            Log.d(viewModel.TeamAName,"+3 points")
+            teamAScore.text = viewModel.ScoreA.toString()
+            Log.d(viewModel.TeamAName, "+3 points")
         }
         button2a.setOnClickListener {
             val score: Int = controller.getScoreA() + 2
             controller.setScoreA(score)
-            teamAScore.text=viewModel.ScoreA.toString()
-            Log.d(viewModel.TeamAName,"+2 points")
+            teamAScore.text = viewModel.ScoreA.toString()
+            Log.d(viewModel.TeamAName, "+2 points")
 
         }
         freeThrowA.setOnClickListener {
             val score: Int = controller.getScoreA() + 1
             controller.setScoreA(score)
-            teamAScore.text=viewModel.ScoreA.toString()
-            Log.d(viewModel.TeamAName,"+1 point")
+            teamAScore.text = viewModel.ScoreA.toString()
+            Log.d(viewModel.TeamAName, "+1 point")
 
         }
         button3b.setOnClickListener {
             val score: Int = controller.getScoreB() + 3
             controller.setScoreB(score)
-            teamBScore.text=viewModel.ScoreB.toString()
-            Log.d(viewModel.TeamBName,"+3 points")
+            teamBScore.text = viewModel.ScoreB.toString()
+            Log.d(viewModel.TeamBName, "+3 points")
 
         }
         button2b.setOnClickListener {
             val score: Int = controller.getScoreB() + 2
             controller.setScoreB(score)
-            teamBScore.text=viewModel.ScoreB.toString()
-            Log.d(viewModel.TeamBName,"+2 points")
+            teamBScore.text = viewModel.ScoreB.toString()
+            Log.d(viewModel.TeamBName, "+2 points")
 
         }
         freeThrowB.setOnClickListener {
             val score: Int = controller.getScoreB() + 1
             controller.setScoreB(score)
-            teamBScore.text=viewModel.ScoreB.toString()
-            Log.d(viewModel.TeamBName,"+1 point")
+            teamBScore.text = viewModel.ScoreB.toString()
+            Log.d(viewModel.TeamBName, "+1 point")
 
         }
-      /*  nameGenerator.setOnClickListener {
-            val teamA : String = controller.nameGenerator()
-            val teamB : String = controller.nameGenerator()
-            controller.setTeamAName(teamA)
-            controller.setTeamBName(teamB)
-            teamAText.text = viewModel.TeamAName
-            teamBText.text = viewModel.TeamBName
-            Log.d("NameGenerator", "Team names generated")
-
-        }
-
-
-       */
-
         resetButt.setOnClickListener {
             controller.setScoreA(0)
             controller.setScoreB(0)
@@ -199,15 +173,28 @@ class MainActivity : AppCompatActivity() {
             teamBScore.text = "0"
             Log.d("ResetButt", "Reset button clicked")
         }
-    }
+        save.setOnClickListener {
+            Log.d("log", "savebuttonWorking")
+            val intent = Intent(view?.context, ClickSave::class.java) //idk if this actually works
+            Log.d("log", "savebuttonWork2222ing")
 
+            intent.putExtra(scoreA, viewModel.ScoreA.toString())
+            intent.putExtra(scoreB, viewModel.ScoreB.toString())
+            intent.putExtra(teamBName, viewModel.TeamBName)
+            intent.putExtra(teamAName, viewModel.TeamAName)
+            startActivity(intent)
+        }
+    }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("teamA", viewModel.TeamAName)
         outState.putString("teamB", viewModel.TeamBName)
     }
-}
+override fun onCreate(savedInstanceState: Bundle?) {
+super.onCreate(savedInstanceState)
 
-         */
     }
 }
+
+
+
