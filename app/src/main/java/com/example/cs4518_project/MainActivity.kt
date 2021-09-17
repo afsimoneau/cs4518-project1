@@ -44,7 +44,10 @@ class MainActivity : AppCompatActivity() {
                 fragmentTransaction.add(R.id.framelayout, ScoreFragment())
                 fragmentTransaction.commit()
             }
-            if (target.equals("HISTORY")){
+            else if (target.equals("HISTORY")){
+                fragmentTransaction.add(R.id.framelayout, HistoryFragment())
+                fragmentTransaction.commit()
+            } else {
                 fragmentTransaction.add(R.id.framelayout, ScoreFragment())
                 fragmentTransaction.commit()
             }
