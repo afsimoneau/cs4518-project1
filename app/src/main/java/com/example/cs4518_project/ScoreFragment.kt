@@ -9,16 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.recyclerview.widget.RecyclerView
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import android.widget.EditText
-import android.widget.FrameLayout
-import androidx.fragment.app.commit
-import androidx.recyclerview.widget.LinearLayoutManager
 
 
 class ScoreFragment : Fragment() {
@@ -74,7 +67,7 @@ class ScoreFragment : Fragment() {
         resetButt = view.findViewById(R.id.ResetButt)
 
         displayButton = view.findViewById(R.id.displayButton)
-        save = view.findViewById(R.id.Save)
+        save = view.findViewById(R.id.Save_btn)
 
         displayButton.setOnClickListener {
             Log.d("log", "buttonWorking")
@@ -174,9 +167,8 @@ class ScoreFragment : Fragment() {
             Log.d("ResetButt", "Reset button clicked")
         }
         save.setOnClickListener {
-            Log.d("log", "savebuttonWorking")
             val intent = Intent(view?.context, ClickSave::class.java) //idk if this actually works
-            Log.d("log", "savebuttonWork2222ing")
+            Log.d("log", "savebuttonWorking")
 
             intent.putExtra(scoreA, viewModel.ScoreA.toString())
             intent.putExtra(scoreB, viewModel.ScoreB.toString())
