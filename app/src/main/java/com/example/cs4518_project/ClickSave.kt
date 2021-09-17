@@ -54,7 +54,7 @@ class ClickSave : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java) //idk if this actually works
             Log.d("log", "savebuttonWorking")
 
-            intent.putExtra("TARGET_FRAGMENT", "RECYCLER")
+            intent.putExtra("TARGET_FRAGMENT", "HISTORY")
 
             startActivity(intent)
         })

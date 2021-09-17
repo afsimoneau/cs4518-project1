@@ -29,8 +29,6 @@ class MainActivity : AppCompatActivity() {
     val fragmentManager= supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //TODO: save team scores in a ViewModel
-        //TODO: clean up layouts/views in activity_main and activity_landscape
         super.onCreate(savedInstanceState)
         val orientation = resources.configuration.orientation
         if (orientation == 1) {
@@ -39,10 +37,17 @@ class MainActivity : AppCompatActivity() {
             setContentView(R.layout.activity_landscape)
         }
 
+        var target = intent.getStringExtra("TARGET_FRAGMENT")
         if(findViewById<FrameLayout>(R.id.framelayout) != null){
             val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.add(R.id.framelayout, ScoreFragment())
-            fragmentTransaction.commit()
+            if (target.equals("SCORE")){
+                fragmentTransaction.add(R.id.framelayout, ScoreFragment())
+                fragmentTransaction.commit()
+            }
+            if (target.equals("HISTORY")){
+                fragmentTransaction.add(R.id.framelayout, ScoreFragment())
+                fragmentTransaction.commit()
+            }
         }
 
     }
