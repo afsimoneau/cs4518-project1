@@ -36,8 +36,19 @@ class MainActivity : AppCompatActivity() {
         } else {
             setContentView(R.layout.activity_landscape)
         }
+        val currentFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container)
 
-        var target = intent.getStringExtra("TARGET_FRAGMENT")
+        if (currentFragment == null) {
+            val fragment = HistoryListFragment.newInstance()
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_container, fragment)
+                .commit()
+        }
+
+
+            var target = intent.getStringExtra("TARGET_FRAGMENT")
         if(findViewById<FrameLayout>(R.id.framelayout) != null){
             val fragmentTransaction = fragmentManager.beginTransaction()
             if (target.equals("SCORE")){

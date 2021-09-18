@@ -6,7 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
+
 class HistoryFragment : Fragment() {
+
+    private lateinit var history: History
+
+    fun OnCreate(savedInstanceState: Bundle?){
+        super.onCreate(savedInstanceState)
+        history = History()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
