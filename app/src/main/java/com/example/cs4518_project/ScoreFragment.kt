@@ -16,8 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 
 class ScoreFragment : Fragment() {
     private lateinit var displayButton: Button
-    private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
     private lateinit var viewModel: TeamViewModel
     private lateinit var button3a: Button
     private lateinit var button3b: Button
