@@ -24,9 +24,8 @@ const val teamBName = "TeamBName.MESSAGE"
 const val REQUEST = 1 // The request code
 
 
-
 class MainActivity : AppCompatActivity() {
-    val fragmentManager= supportFragmentManager
+    val fragmentManager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,20 +47,16 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-            var target = intent.getStringExtra("TARGET_FRAGMENT")
-        if(findViewById<FrameLayout>(R.id.framelayout) != null){
+        val target = intent.getStringExtra("TARGET_FRAGMENT")
+        if (findViewById<FrameLayout>(R.id.framelayout) != null) {
             val fragmentTransaction = fragmentManager.beginTransaction()
-            if (target.equals("SCORE")){
-                fragmentTransaction.add(R.id.framelayout, ScoreFragment())
-                fragmentTransaction.commit()
+            when (target) {
+                "SCORE" -> fragmentTransaction.add(R.id.framelayout, ScoreFragment())
+                "HISTORY" -> fragmentTransaction.add(R.id.framelayout, HistoryListFragment())
+                else -> fragmentTransaction.add(R.id.framelayout, ScoreFragment())
             }
-            else if (target.equals("HISTORY")){
-                fragmentTransaction.add(R.id.framelayout, HistoryFragment())
-                fragmentTransaction.commit()
-            } else {
-                fragmentTransaction.add(R.id.framelayout, ScoreFragment())
-                fragmentTransaction.commit()
-            }
+            Log.d(this::class.java.toString(), "Intent: $target")
+            fragmentTransaction.commit()
         }
 
     }

@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import android.app.Activity
 import androidx.lifecycle.ViewModelProvider
 
@@ -39,7 +38,9 @@ class ScoreFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_score, container, false)
         viewModel = ViewModelProvider(this)[TeamViewModel::class.java]
         val MainActivity = MainActivity()
-        val controller = TeamController(viewModel, MainActivity) //idk if i can just passin MainActivity like this...
+        val controller = TeamController(
+            viewModel
+        ) //idk if i can just passin MainActivity like this...
         val orientation = resources.configuration.orientation
         /* if (orientation == 1) {
             setContentView(MainActivity, R.layout.activity_main)
@@ -49,23 +50,23 @@ class ScoreFragment : Fragment() {
 
         */
         if (savedInstanceState != null) {
-            viewModel.TeamAName = savedInstanceState.getString("teamA").toString()
-            viewModel.TeamBName = savedInstanceState.getString("teamB").toString()
+            viewModel.teamAName = savedInstanceState.getString("teamA").toString()
+            viewModel.teamBName = savedInstanceState.getString("teamB").toString()
         } else {
-            viewModel.TeamAName = "Team A"
-            viewModel.TeamBName = "Team B"
+            viewModel.teamAName = "Team A"
+            viewModel.teamBName = "Team B"
         }
 
         button3a = view.findViewById(R.id.button3a)
         button3b = view.findViewById(R.id.button3b)
         button2a = view.findViewById(R.id.button2a)
         button2b = view.findViewById(R.id.button2b)
-        freeThrowB = view.findViewById(R.id.FreeThrowB)
-        freeThrowA = view.findViewById(R.id.FreeThrowA)
-        resetButt = view.findViewById(R.id.ResetButt)
+        freeThrowB = view.findViewById(R.id.freeThrowB)
+        freeThrowA = view.findViewById(R.id.freeThrowA)
+        resetButt = view.findViewById(R.id.resetButt)
 
-        displayButton = view.findViewById(R.id.displayButton)
-        save = view.findViewById(R.id.Save_btn)
+        displayButton = view.findViewById(R.id.displayButt)
+        save = view.findViewById(R.id.saveButt)
 
         displayButton.setOnClickListener {
             Log.d("log", "buttonWorking")
@@ -74,38 +75,38 @@ class ScoreFragment : Fragment() {
             Log.d("log", "savebuttonWorking")
 
         }
-        teamAScore = view.findViewById<TextView>(R.id.TeamAScore).apply {
-            text = viewModel.ScoreA.toString()
+        teamAScore = view.findViewById<TextView>(R.id.teamAScore).apply {
+            text = viewModel.scoreA.toString()
         }
 
-        teamBScore = view.findViewById<TextView>(R.id.TeamBScore).apply {
-            text = viewModel.ScoreB.toString()
+        teamBScore = view.findViewById<TextView>(R.id.teamBScore).apply {
+            text = viewModel.scoreB.toString()
         }
 
-        teamAText = view.findViewById<TextView>(R.id.TeamAText).apply {
-            text = viewModel.TeamAName
+        teamAText = view.findViewById<TextView>(R.id.teamAText).apply {
+            text = viewModel.teamAName
         }
 
-        teamBText = view.findViewById<TextView>(R.id.TeamBText).apply {
-            text = viewModel.TeamBName
+        teamBText = view.findViewById<TextView>(R.id.teamBText).apply {
+            text = viewModel.teamBName
         }
 
-        setListeners(controller )
+        setListeners(controller)
         return view
 
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int,data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode != Activity.RESULT_OK) {
-            Log.d("Error","Did not properly receive request")
+            Log.d("Error", "Did not properly receive request")
             return
         }
 
         if (requestCode == REQUEST) {
-            Log.d("Success","Back button clicked")
+            Log.d("Success", "Back button clicked")
 
         }
 
@@ -115,42 +116,42 @@ class ScoreFragment : Fragment() {
         button3a.setOnClickListener {
             val score: Int = controller.getScoreA() + 3
             controller.setScoreA(score)
-            teamAScore.text = viewModel.ScoreA.toString()
-            Log.d(viewModel.TeamAName, "+3 points")
+            teamAScore.text = viewModel.scoreA.toString()
+            Log.d(viewModel.teamAName, "+3 points")
         }
         button2a.setOnClickListener {
             val score: Int = controller.getScoreA() + 2
             controller.setScoreA(score)
-            teamAScore.text = viewModel.ScoreA.toString()
-            Log.d(viewModel.TeamAName, "+2 points")
+            teamAScore.text = viewModel.scoreA.toString()
+            Log.d(viewModel.teamAName, "+2 points")
 
         }
         freeThrowA.setOnClickListener {
             val score: Int = controller.getScoreA() + 1
             controller.setScoreA(score)
-            teamAScore.text = viewModel.ScoreA.toString()
-            Log.d(viewModel.TeamAName, "+1 point")
+            teamAScore.text = viewModel.scoreA.toString()
+            Log.d(viewModel.teamAName, "+1 point")
 
         }
         button3b.setOnClickListener {
             val score: Int = controller.getScoreB() + 3
             controller.setScoreB(score)
-            teamBScore.text = viewModel.ScoreB.toString()
-            Log.d(viewModel.TeamBName, "+3 points")
+            teamBScore.text = viewModel.scoreB.toString()
+            Log.d(viewModel.teamBName, "+3 points")
 
         }
         button2b.setOnClickListener {
             val score: Int = controller.getScoreB() + 2
             controller.setScoreB(score)
-            teamBScore.text = viewModel.ScoreB.toString()
-            Log.d(viewModel.TeamBName, "+2 points")
+            teamBScore.text = viewModel.scoreB.toString()
+            Log.d(viewModel.teamBName, "+2 points")
 
         }
         freeThrowB.setOnClickListener {
             val score: Int = controller.getScoreB() + 1
             controller.setScoreB(score)
-            teamBScore.text = viewModel.ScoreB.toString()
-            Log.d(viewModel.TeamBName, "+1 point")
+            teamBScore.text = viewModel.scoreB.toString()
+            Log.d(viewModel.teamBName, "+1 point")
 
         }
         resetButt.setOnClickListener {
@@ -168,22 +169,20 @@ class ScoreFragment : Fragment() {
             val intent = Intent(view?.context, ClickSave::class.java) //idk if this actually works
             Log.d("log", "savebuttonWorking")
 
-            intent.putExtra(scoreA, viewModel.ScoreA.toString())
-            intent.putExtra(scoreB, viewModel.ScoreB.toString())
-            intent.putExtra(teamBName, viewModel.TeamBName)
-            intent.putExtra(teamAName, viewModel.TeamAName)
+            intent.putExtra(scoreA, viewModel.scoreA.toString())
+            intent.putExtra(scoreB, viewModel.scoreB.toString())
+            intent.putExtra(teamBName, viewModel.teamBName)
+            intent.putExtra(teamAName, viewModel.teamAName)
             startActivity(intent)
         }
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("teamA", viewModel.TeamAName)
-        outState.putString("teamB", viewModel.TeamBName)
+        outState.putString("teamA", viewModel.teamAName)
+        outState.putString("teamB", viewModel.teamBName)
     }
-override fun onCreate(savedInstanceState: Bundle?) {
-super.onCreate(savedInstanceState)
 
-    }
 }
 
 

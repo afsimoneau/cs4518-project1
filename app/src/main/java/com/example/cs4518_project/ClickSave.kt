@@ -18,8 +18,8 @@ class ClickSave : AppCompatActivity() {
     private lateinit var teamBText: TextView
 
     private lateinit var newGameButt: Button
-    private lateinit var historyBtn: Button
-    private lateinit var saveBtn: Button
+    private lateinit var historyButt: Button
+    private lateinit var saveButt: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,31 +33,31 @@ class ClickSave : AppCompatActivity() {
         }
         setResult(Activity.RESULT_OK, data)
 
-        teamAScore = findViewById<TextView>(R.id.TeamAScore).apply { text = savedScoreA }
-        teamBScore = findViewById<TextView>(R.id.TeamBScore).apply { text = savedScoreB }
-        teamAText = findViewById<TextView>(R.id.TeamAText).apply { text = savedTextA }
-        teamBText = findViewById<TextView>(R.id.TeamBText).apply { text = savedTextB }
+        teamAScore = findViewById<TextView>(R.id.teamAScore).apply { text = savedScoreA }
+        teamBScore = findViewById<TextView>(R.id.teamBScore).apply { text = savedScoreB }
+        teamAText = findViewById<TextView>(R.id.teamAText).apply { text = savedTextA }
+        teamBText = findViewById<TextView>(R.id.teamBText).apply { text = savedTextB }
 
         newGameButt = findViewById(R.id.NewGameButt)
-        historyBtn = findViewById(R.id.btn_gamesHistory)
-        saveBtn = findViewById(R.id.Save_btn)
+        historyButt = findViewById(R.id.btn_gamesHistory)
+        saveButt = findViewById(R.id.saveButt)
 
-        newGameButt.setOnClickListener({
+        newGameButt.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java) //idk if this actually works
-            Log.d("log", "savebuttonWorking")
+            Log.d(this::class.java.toString(), "newGameButt")
 
             intent.putExtra("TARGET_FRAGMENT", "SCORE")
 
             startActivity(intent)
-        })
-        historyBtn.setOnClickListener({
+        }
+        historyButt.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java) //idk if this actually works
-            Log.d("log", "savebuttonWorking")
+            Log.d(this::class.java.toString(), "historyButt")
 
             intent.putExtra("TARGET_FRAGMENT", "HISTORY")
 
             startActivity(intent)
-        })
+        }
 
     }
 

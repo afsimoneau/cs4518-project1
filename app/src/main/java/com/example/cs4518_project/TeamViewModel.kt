@@ -2,9 +2,9 @@ package com.example.cs4518_project
 
 import androidx.lifecycle.ViewModel
 
-class TeamViewModel: ViewModel(){
-    lateinit var TeamAName:String
-    lateinit var TeamBName:String
-    var ScoreA:Int = 0
-    var ScoreB:Int = 0
+class TeamViewModel : ViewModel() {
+    lateinit var teamAName: String
+    lateinit var teamBName: String
+    var scoreA: Int = 0
+    var scoreB: Int = 0
 }
