@@ -11,7 +11,7 @@ class HistoryListViewModel : ViewModel() {
         Log.d("HistoryListViewModel","Size: $historySize")
         for (i in 0 until historySize) {
             val history = History()
-            history.title = "History #$i"
+            history.title = "Game #$i"
             listofHistory += history
         }
     }

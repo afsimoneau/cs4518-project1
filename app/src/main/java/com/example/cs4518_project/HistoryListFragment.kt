@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +19,8 @@ class HistoryListFragment : Fragment() {
     private val historyListViewModel: HistoryListViewModel by lazy {
         ViewModelProvider(this).get(HistoryListViewModel::class.java)
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,11 +47,19 @@ class HistoryListFragment : Fragment() {
         private lateinit var history: History
         private val titleTextView: TextView = itemView.findViewById(R.id.list_item_title)
         private val dateTextView: TextView = itemView.findViewById(R.id.list_item_detail)
+        private val winnerImage : ImageView = itemView.findViewById(R.id.list_item_image)
 
         fun bind(history: History) {
             this.history = history
             titleTextView.text = this.history.title
             dateTextView.text = this.history.date.toString()
+            if (false){
+                winnerImage.setImageResource(R.drawable.basketball);
+            }
+            else{
+                winnerImage.setImageResource(R.drawable.basketball2)
+
+            }
         }
     }
 

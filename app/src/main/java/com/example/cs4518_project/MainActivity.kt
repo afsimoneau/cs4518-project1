@@ -1,19 +1,9 @@
 package com.example.cs4518_project
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Button
-import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
-import android.content.Intent
-import android.view.View
-import android.widget.EditText
 import android.widget.FrameLayout
-import androidx.fragment.app.commit
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 
 //view
