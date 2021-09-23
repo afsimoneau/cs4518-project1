@@ -3,6 +3,7 @@ package com.example.cs4518_project
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import com.example.cs4518_project.History
 import java.util.*
@@ -27,4 +28,6 @@ interface HistoryDao {
     @Query("SELECT * FROM history WHERE id =(:id)")
     fun getHistoryteamID(id: UUID): LiveData<List<History?>>
 
+    @Insert()
+    fun addHistory(history: History?)
 }

@@ -21,6 +21,8 @@ class ClickSave : AppCompatActivity() {
     private lateinit var historyButt: Button
     private lateinit var saveButt: Button
 
+    private var historyRepository: HistoryRepository = HistoryRepository.get()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_click_save)
@@ -57,6 +59,15 @@ class ClickSave : AppCompatActivity() {
             intent.putExtra("TARGET_FRAGMENT", "HISTORY")
 
             startActivity(intent)
+        }
+        saveButt.setOnClickListener{
+            val history = History()
+            history.teamAName = teamAText.text as String;
+            history.teamBName = teamBText.text as String;
+            history.teamAScore = Integer.parseInt(teamAScore.text as String);
+            history.teamBScore = Integer.parseInt(teamBScore.text as String);
+            historyRepository.addHistory(history)
+
         }
 
     }

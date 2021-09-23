@@ -15,7 +15,7 @@ const val REQUEST = 1 // The request code
 
 
 class MainActivity : AppCompatActivity() {
-    val fragmentManager = supportFragmentManager
+    private val fragmentManager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

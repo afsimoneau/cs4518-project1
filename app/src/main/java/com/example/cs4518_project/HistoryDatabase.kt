@@ -15,13 +15,3 @@ import com.example.cs4518_project.HistoryTypeConverters
 abstract class HistoryDatabase : RoomDatabase() {
     abstract fun HistoryDao(): HistoryDao
 }
-    val migration_1_2 = object : Migration(1, 2) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL(
-                "CREATE TABLE IF NOT EXISTS 'History' (`date` INTEGER NOT NULL, `teamAName` TEXT NOT NULL," +
-                        "`teamAScore` INTEGER NOT NULL,`id` TEXT NOT NULL, `title` TEXT NOT NULL, `teamBName` TEXT NOT NULL," +
-                        "`teamBScore` INTEGER NOT NULL, PRIMARY KEY(`id`))"
-
-            )
-        }
-    }
