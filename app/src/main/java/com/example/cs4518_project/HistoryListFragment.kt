@@ -8,24 +8,21 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+
+private const val TAG = "HistoryListFragment"
 class HistoryListFragment : Fragment() {
     private lateinit var historyRecyclerView: RecyclerView
-    private var adapter: HistoryAdapter? = null
+    private var adapter: HistoryAdapter? = HistoryAdapter(emptyList())
 
     private val historyListViewModel: HistoryListViewModel by lazy {
         ViewModelProvider(this).get(HistoryListViewModel::class.java)
     }
 
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(this::class.java.toString(), "Total history: ${historyListViewModel.listofHistory.size}")
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,10 +34,20 @@ class HistoryListFragment : Fragment() {
         historyRecyclerView =
             view.findViewById(R.id.recyclerSummary) as RecyclerView
         historyRecyclerView.layoutManager = LinearLayoutManager(context)
-        updateUI()
-
+        historyRecyclerView.adapter = adapter
         return view
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        historyListViewModel.historyLiveData.observe(viewLifecycleOwner, Observer {
+            histories -> histories?.let{
+                Log.i(TAG ,"History ${histories.size}")
+
+            updateUI(histories)
+        }
+        })
     }
 
     private inner class HistoryHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -79,11 +86,13 @@ class HistoryListFragment : Fragment() {
         }
     }
 
-    private fun updateUI() {
-        val listOfHistory = historyListViewModel.listofHistory
-        adapter = HistoryAdapter(listOfHistory)
+
+    private fun updateUI(histories:List<History>) {
+        adapter = HistoryAdapter(histories)
         historyRecyclerView.adapter = adapter
     }
+
+
 
     companion object {
         fun newInstance(): HistoryListFragment {
