@@ -1,5 +1,7 @@
 package com.example.cs4518_project
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,11 +15,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 
 class HistoryListFragment : Fragment() {
     private lateinit var historyRecyclerView: RecyclerView
     private var adapter: HistoryAdapter? = HistoryAdapter(emptyList())
+    private var historyRepository: HistoryRepository = HistoryRepository.get()
 
     private val historyListViewModel: HistoryListViewModel by lazy {
         ViewModelProvider(this).get(HistoryListViewModel::class.java)
@@ -25,6 +29,30 @@ class HistoryListFragment : Fragment() {
 
     private lateinit var viewModel: TeamViewModel
 
+    interface Callbacks {
+        fun onSelectHistoryFromHistory(historyId: UUID)
+        fun onClickNewGameFromHistory()
+    }
+
+    private var callbacks: Callbacks? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        historyListViewModel.historyLiveData = historyRepository.getHistoriesOfWinner(
+            arguments?.getString("winning_team").toString()
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,22 +93,33 @@ class HistoryListFragment : Fragment() {
         })
     }
 
-    private inner class HistoryHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private inner class HistoryHolder(view: View) : RecyclerView.ViewHolder(view),
+        View.OnClickListener {
         private lateinit var history: History
         private val titleTextView: TextView = itemView.findViewById(R.id.list_item_title)
         private val dateTextView: TextView = itemView.findViewById(R.id.list_item_detail)
         private val winnerImage: ImageView = itemView.findViewById(R.id.list_item_image)
 
+        init {
+            itemView.setOnClickListener(this)
+        }
+
         fun bind(history: History) {
             this.history = history
-            titleTextView.text = this.history.title
+            titleTextView.text = "${history.teamAName} vs ${history.teamBName} | ${history.teamAScore}:${history.teamBScore}"
             dateTextView.text = this.history.date.toString()
             if (history.teamAScore > history.teamBScore) {
-                winnerImage.setImageResource(R.drawable.basketball);
-            } else {
+                winnerImage.setImageResource(R.drawable.basketball)
+            } else if (history.teamAScore < history.teamBScore) {
                 winnerImage.setImageResource(R.drawable.basketball2)
-
+            } else {
+                winnerImage.setImageResource(R.drawable.basketball3)
             }
+        }
+
+        override fun onClick(view: View?) {
+            Log.d(this::class.java.toString(), "Holder Click")
+            callbacks?.onSelectHistoryFromHistory(history.id)
         }
     }
 
@@ -108,8 +147,11 @@ class HistoryListFragment : Fragment() {
 
 
     companion object {
-        fun newInstance(): HistoryListFragment {
-            return HistoryListFragment()
+        fun newInstance(winningTeam: String): HistoryListFragment {
+            var args = Bundle().apply {
+                putSerializable("winning_team", winningTeam)
+            }
+            return HistoryListFragment().apply { arguments = args }
         }
     }
 }

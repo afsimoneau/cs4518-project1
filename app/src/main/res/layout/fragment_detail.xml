@@ -8,7 +8,6 @@
 
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -20,7 +19,6 @@
             android:background="@color/NBABlue">
 
             <TextView
-                android:id="@+id/appBarText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
@@ -36,11 +34,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <TextView
+            <EditText
                 android:id="@+id/teamAText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:inputType="text"
                 android:text="@string/team_a"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -49,11 +48,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <EditText
                 android:id="@+id/teamBText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:inputType="text"
                 android:text="@string/team_b"
                 android:textAlignment="center"
                 android:textSize="30sp"
@@ -70,11 +70,12 @@
             android:layout_height="46dp"
             android:layout_weight="1">
 
-            <TextView
+            <EditText
                 android:id="@+id/teamAScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:inputType="number"
                 android:text="@string/_0"
                 android:textSize="80sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -83,11 +84,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <EditText
                 android:id="@+id/teamBScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:inputType="number"
                 android:text="@string/_0"
                 android:textSize="80sp"
                 app:layout_constraintBottom_toBottomOf="parent"

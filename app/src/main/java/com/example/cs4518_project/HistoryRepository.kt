@@ -3,30 +3,44 @@ package com.example.cs4518_project
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
+import java.util.*
 import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "game-database"
 
-class HistoryRepository private constructor(context : Context) {
+class HistoryRepository private constructor(context: Context) {
     private val database: HistoryDatabase =
         Room.databaseBuilder(
-            context.applicationContext, HistoryDatabase::class.java, DATABASE_NAME)
+            context.applicationContext, HistoryDatabase::class.java, DATABASE_NAME
+        )
             .build()
     private val executor = Executors.newSingleThreadExecutor()
 
     private val historyDao = database.HistoryDao()
 
 
-    fun getHistory(): LiveData<List<History>> = historyDao.getHistory()
+    fun getHistories(): LiveData<List<History>> = historyDao.getHistories()
 
-    fun addHistory(history:History) {
-        executor.execute{
+    fun getHistoriesOfWinner(winner:String): LiveData<List<History>> {
+        when (winner){
+            "TEAM_A"->return historyDao.getHistoriesOfTeamA()
+            "TEAM_B"->return historyDao.getHistoriesOfTeamB()
+            else -> return historyDao.getHistories()
+        }
+    }
+
+
+    fun getHistory(historyId: UUID): LiveData<History> = historyDao.getHistory(historyId)
+
+
+    fun addHistory(history: History) {
+        executor.execute {
             historyDao.addHistory(history)
         }
     }
 
-    fun updateHistory(history: History){
-        executor.execute{
+    fun updateHistory(history: History) {
+        executor.execute {
             historyDao.updateHistory(history)
         }
     }
@@ -42,8 +56,7 @@ class HistoryRepository private constructor(context : Context) {
         }
 
         fun get(): HistoryRepository {
-            return INSTANCE ?:
-            throw IllegalStateException("HistoryRepository must be initialized")
+            return INSTANCE ?: throw IllegalStateException("HistoryRepository must be initialized")
         }
     }
 }

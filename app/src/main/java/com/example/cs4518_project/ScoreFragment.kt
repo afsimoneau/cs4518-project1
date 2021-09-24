@@ -1,16 +1,18 @@
 package com.example.cs4518_project
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.app.Activity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import java.util.*
 
 
 class ScoreFragment : Fragment() {
@@ -30,6 +32,24 @@ class ScoreFragment : Fragment() {
     private lateinit var saveButt: Button
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
+
+    interface Callbacks {
+        fun onClickHistoryFromScore(teamAScore: Int, teamBScore: Int)
+        fun onClickSaveFromScore(historyId: UUID)
+    }
+
+    private var callbacks: Callbacks? = null
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,16 +73,16 @@ class ScoreFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
 
-        viewModel.teamAScore.observe(viewLifecycleOwner,{
+        viewModel.teamAScore.observe(viewLifecycleOwner, {
             teamAScore.text = it.toString()
         })
-        viewModel.teamBScore.observe(viewLifecycleOwner,{
+        viewModel.teamBScore.observe(viewLifecycleOwner, {
             teamBScore.text = it.toString()
         })
-        viewModel.teamAName.observe(viewLifecycleOwner,{
+        viewModel.teamAName.observe(viewLifecycleOwner, {
             teamAText.text = it
         })
-        viewModel.teamBName.observe(viewLifecycleOwner,{
+        viewModel.teamBName.observe(viewLifecycleOwner, {
             teamBText.text = it
         })
     }
@@ -177,10 +197,7 @@ class ScoreFragment : Fragment() {
             )
             historyRepository.addHistory(history)
 
-            val intent = Intent(view?.context, MainActivity::class.java)
-            intent.putExtra("TARGET_FRAGMENT", "DETAIL")
-
-            startActivity(intent)
+            callbacks?.onClickSaveFromScore(history.id)
         }
         historyButt.setOnClickListener {
             Log.d(this::class.java.toString(), "HistoryButt")
@@ -193,10 +210,16 @@ class ScoreFragment : Fragment() {
             )
             historyRepository.addHistory(history)
 
-            val intent = Intent(view?.context, MainActivity::class.java)
-            intent.putExtra("TARGET_FRAGMENT", "HISTORY")
+            callbacks?.onClickHistoryFromScore(
+                Integer.parseInt(teamAScore.text as String),
+                Integer.parseInt(teamBScore.text as String)
+            )
+        }
+    }
 
-            startActivity(intent)
+    companion object {
+        fun newInstance(): ScoreFragment {
+            return ScoreFragment()
         }
     }
 

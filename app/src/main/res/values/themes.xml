@@ -19,11 +19,4 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.CS4518project1.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.CS4518project1.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="Theme.CS4518projects.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.CS4518projects.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

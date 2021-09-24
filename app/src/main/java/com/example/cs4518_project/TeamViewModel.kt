@@ -9,7 +9,7 @@ class TeamViewModel : ViewModel() {
     var teamAScore: MutableLiveData<Int> = MutableLiveData(0)
     var teamBScore: MutableLiveData<Int> = MutableLiveData(0)
 
-    fun reset(){
+    fun reset() {
         teamAName.value = "Team A"
         teamBName.value = "Team B"
         teamAScore.value = 0

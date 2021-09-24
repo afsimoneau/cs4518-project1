@@ -1,6 +1,6 @@
 package com.example.cs4518_project
 
-import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,9 +11,10 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import java.util.*
 
 class DetailFragment : Fragment() {
-    private lateinit var viewModel: TeamViewModel
     private lateinit var teamBScore: TextView
     private lateinit var teamAScore: TextView
     private lateinit var teamAText: TextView
@@ -23,7 +24,38 @@ class DetailFragment : Fragment() {
     private lateinit var historyButt: Button
     private lateinit var saveButt: Button
 
+    private lateinit var history: History
+
     private var historyRepository: HistoryRepository = HistoryRepository.get()
+
+    interface Callbacks {
+        fun onClickNewGameFromDetail()
+        fun onClickHistoryFromDetail()
+    }
+
+    private var callbacks: Callbacks? = null
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
+    private val historyDetailViewModel: HistoryDetailViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(HistoryDetailViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        history = History()
+        val historyId = arguments?.getSerializable("history_id") as UUID
+        historyDetailViewModel.loadHistory(historyId)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,8 +64,6 @@ class DetailFragment : Fragment() {
     ): View? {
         container?.removeAllViews()
         val view = inflater.inflate(R.layout.fragment_detail, container, false)
-        viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
-
 
         findViews(view)
 
@@ -44,81 +74,64 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
 
-        viewModel.teamAScore.observe(viewLifecycleOwner,{
-            teamAScore.text = it.toString()
+        historyDetailViewModel.historyLiveData.observe(viewLifecycleOwner, { history ->
+            history.let {
+                this.history = history
+                updateUI()
+            }
         })
-        viewModel.teamBScore.observe(viewLifecycleOwner,{
-            teamBScore.text = it.toString()
-        })
-        viewModel.teamAName.observe(viewLifecycleOwner,{
-            teamAText.text = it
-        })
-        viewModel.teamBName.observe(viewLifecycleOwner,{
-            teamBText.text = it
-        })
+    }
+
+    private fun updateUI() {
+        teamAText.text = history.teamAName
+        teamBText.text = history.teamBName
+        teamAScore.text = history.teamAScore.toString()
+        teamBScore.text = history.teamBScore.toString()
     }
 
     private fun setOnClickListeners(view: View) {
         resetButt.setOnClickListener {
-            val intent =
-                Intent(view.context, MainActivity::class.java) //idk if this actually works
             Log.d(this::class.java.toString(), "newGameButt")
 
-            intent.putExtra("TARGET_FRAGMENT", "SCORE")
-
-            startActivity(intent)
+            callbacks?.onClickNewGameFromDetail()
         }
 
         historyButt.setOnClickListener {
-            val intent =
-                Intent(view.context, MainActivity::class.java) //idk if this actually works
             Log.d(this::class.java.toString(), "historyButt")
 
-            intent.putExtra("TARGET_FRAGMENT", "HISTORY")
-
-            startActivity(intent)
+            callbacks?.onClickHistoryFromDetail()
         }
 
         saveButt.setOnClickListener {
-            val history = History(
-                teamAName = teamAText.text as String,
-                teamBName = teamBText.text as String,
-                teamAScore = Integer.parseInt(teamAScore.text as String),
-                teamBScore = Integer.parseInt(teamBScore.text as String)
-            )
             historyRepository.updateHistory(history)
+            historyDetailViewModel.loadHistory(history.id)
+            updateUI()
         }
     }
 
     private fun findViews(view: View) {
-        teamAScore = view.findViewById<TextView>(R.id.teamAScore)
-            .apply { text = viewModel.teamAScore.value.toString() }
-        teamBScore = view.findViewById<TextView>(R.id.teamBScore)
-            .apply { text = viewModel.teamBScore.value.toString() }
-        teamAText = view.findViewById<TextView>(R.id.teamAText).apply { text = viewModel.teamAName.value }
-        teamBText = view.findViewById<TextView>(R.id.teamBText).apply { text = viewModel.teamBName.value }
+        teamAScore = view.findViewById(R.id.teamAScore)
+        teamBScore = view.findViewById(R.id.teamBScore)
+        teamAText = view.findViewById(R.id.teamAText)
+        teamBText = view.findViewById(R.id.teamBText)
 
         historyButt = view.findViewById(R.id.historyButt_detail)
         saveButt = view.findViewById(R.id.saveButt_detail)
         resetButt = view.findViewById(R.id.resetButt_detail)
     }
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode != Activity.RESULT_OK) {
-            Log.d("Error", "Did not properly receive request")
-            return
+    companion object {
+        fun newInstance(historyId: UUID): DetailFragment {
+            val args = Bundle().apply {
+                putSerializable("history_id", historyId)
+            }
+            return DetailFragment().apply { arguments = args }
         }
-
-        if (requestCode == REQUEST) {
-            Log.d("Success", "Back button clicked")
-
-        }
-
     }
 
+    override fun onStop() {
+        super.onStop()
+        historyDetailViewModel.saveHistory(history)
+    }
 }
