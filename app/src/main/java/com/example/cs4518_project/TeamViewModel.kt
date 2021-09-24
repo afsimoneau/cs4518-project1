@@ -1,10 +1,18 @@
 package com.example.cs4518_project
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class TeamViewModel : ViewModel() {
-    lateinit var teamAName: String
-    lateinit var teamBName: String
-    var scoreA: Int = 0
-    var scoreB: Int = 0
+    var teamAName: MutableLiveData<String> = MutableLiveData("Team A")
+    var teamBName: MutableLiveData<String> = MutableLiveData("Team B")
+    var teamAScore: MutableLiveData<Int> = MutableLiveData(0)
+    var teamBScore: MutableLiveData<Int> = MutableLiveData(0)
+
+    fun reset(){
+        teamAName.value = "Team A"
+        teamBName.value = "Team B"
+        teamAScore.value = 0
+        teamBScore.value = 0
+    }
 }

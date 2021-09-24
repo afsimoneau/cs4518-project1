@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.cs4518_project.History
 import java.util.*
 
@@ -30,4 +31,7 @@ interface HistoryDao {
 
     @Insert()
     fun addHistory(history: History?)
+
+    @Update()
+    fun updateHistory(history: History?)
 }

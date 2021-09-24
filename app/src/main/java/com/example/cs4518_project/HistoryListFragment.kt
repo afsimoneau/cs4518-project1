@@ -1,20 +1,20 @@
 package com.example.cs4518_project
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-private const val TAG = "HistoryListFragment"
 class HistoryListFragment : Fragment() {
     private lateinit var historyRecyclerView: RecyclerView
     private var adapter: HistoryAdapter? = HistoryAdapter(emptyList())
@@ -23,30 +23,45 @@ class HistoryListFragment : Fragment() {
         ViewModelProvider(this).get(HistoryListViewModel::class.java)
     }
 
+    private lateinit var viewModel: TeamViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        container?.removeAllViews()
         val view = inflater.inflate(R.layout.fragment_history, container, false)
+        viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
 
         historyRecyclerView =
-            view.findViewById(R.id.recyclerSummary) as RecyclerView
+            view.findViewById(R.id.historyRecyclerView) as RecyclerView
         historyRecyclerView.layoutManager = LinearLayoutManager(context)
         historyRecyclerView.adapter = adapter
+
+        var resetButt = view.findViewById<Button>(R.id.resetButt_history)
+        resetButt.setOnClickListener {
+            Log.d(this::class.java.toString(), "ResetButt")
+
+            val intent = Intent(view?.context, MainActivity::class.java)
+            intent.putExtra("TARGET_FRAGMENT", "SCORE")
+
+            viewModel.reset()
+            startActivity(intent)
+        }
         return view
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        historyListViewModel.historyLiveData.observe(viewLifecycleOwner, Observer {
-            histories -> histories?.let{
-                Log.i(TAG ,"History ${histories.size}")
+        historyListViewModel.historyLiveData.observe(viewLifecycleOwner, { histories ->
+            histories?.let {
+                Log.d(this::class.java.toString(), "History ${histories.size}")
 
-            updateUI(histories)
-        }
+                updateUI(histories)
+            }
         })
     }
 
@@ -54,16 +69,15 @@ class HistoryListFragment : Fragment() {
         private lateinit var history: History
         private val titleTextView: TextView = itemView.findViewById(R.id.list_item_title)
         private val dateTextView: TextView = itemView.findViewById(R.id.list_item_detail)
-        private val winnerImage : ImageView = itemView.findViewById(R.id.list_item_image)
+        private val winnerImage: ImageView = itemView.findViewById(R.id.list_item_image)
 
         fun bind(history: History) {
             this.history = history
             titleTextView.text = this.history.title
             dateTextView.text = this.history.date.toString()
-            if (false){
+            if (history.teamAScore > history.teamBScore) {
                 winnerImage.setImageResource(R.drawable.basketball);
-            }
-            else{
+            } else {
                 winnerImage.setImageResource(R.drawable.basketball2)
 
             }
@@ -87,11 +101,10 @@ class HistoryListFragment : Fragment() {
     }
 
 
-    private fun updateUI(histories:List<History>) {
+    private fun updateUI(histories: List<History>) {
         adapter = HistoryAdapter(histories)
         historyRecyclerView.adapter = adapter
     }
-
 
 
     companion object {

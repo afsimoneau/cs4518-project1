@@ -18,11 +18,19 @@ class HistoryRepository private constructor(context : Context) {
 
 
     fun getHistory(): LiveData<List<History>> = historyDao.getHistory()
+
     fun addHistory(history:History) {
         executor.execute{
             historyDao.addHistory(history)
         }
     }
+
+    fun updateHistory(history: History){
+        executor.execute{
+            historyDao.updateHistory(history)
+        }
+    }
+
 
     companion object {
         private var INSTANCE: HistoryRepository? = null
@@ -35,7 +43,7 @@ class HistoryRepository private constructor(context : Context) {
 
         fun get(): HistoryRepository {
             return INSTANCE ?:
-            throw IllegalStateException("CrimeRepository must be initialized")
+            throw IllegalStateException("HistoryRepository must be initialized")
         }
     }
 }
