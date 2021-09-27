@@ -68,7 +68,7 @@ class HistoryListFragment : Fragment() {
         historyRecyclerView.layoutManager = LinearLayoutManager(context)
         historyRecyclerView.adapter = adapter
 
-        var resetButt = view.findViewById<Button>(R.id.resetButt_history)
+        val resetButt = view.findViewById<Button>(R.id.resetButt_history)
         resetButt.setOnClickListener {
             Log.d(this::class.java.toString(), "ResetButt")
 
@@ -104,16 +104,21 @@ class HistoryListFragment : Fragment() {
             itemView.setOnClickListener(this)
         }
 
+        @SuppressLint("SetTextI18n")
         fun bind(history: History) {
             this.history = history
-            titleTextView.text = "${history.teamAName} vs ${history.teamBName} | ${history.teamAScore}:${history.teamBScore}"
+            titleTextView.text = "${this.history.title} | ${history.teamAName} vs ${history.teamBName} | ${history.teamAScore}:${history.teamBScore}"
             dateTextView.text = this.history.date.toString()
-            if (history.teamAScore > history.teamBScore) {
-                winnerImage.setImageResource(R.drawable.basketball)
-            } else if (history.teamAScore < history.teamBScore) {
-                winnerImage.setImageResource(R.drawable.basketball2)
-            } else {
-                winnerImage.setImageResource(R.drawable.basketball3)
+            when {
+                history.teamAScore > history.teamBScore -> {
+                    winnerImage.setImageResource(R.drawable.basketball)
+                }
+                history.teamAScore < history.teamBScore -> {
+                    winnerImage.setImageResource(R.drawable.basketball2)
+                }
+                else -> {
+                    winnerImage.setImageResource(R.drawable.basketball3)
+                }
             }
         }
 
@@ -148,7 +153,7 @@ class HistoryListFragment : Fragment() {
 
     companion object {
         fun newInstance(winningTeam: String): HistoryListFragment {
-            var args = Bundle().apply {
+            val args = Bundle().apply {
                 putSerializable("winning_team", winningTeam)
             }
             return HistoryListFragment().apply { arguments = args }

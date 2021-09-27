@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
+import kotlin.random.Random.Default.nextInt
 
 
 class ScoreFragment : Fragment() {
@@ -61,6 +62,14 @@ class ScoreFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
         val controller = TeamController(viewModel)
 
+        for (i in 0..150){
+            val h = History()
+            h.teamAScore=(0..50).random()
+            h.teamBScore=(0..50).random()
+            h.teamAName="Team ${(1000..10000).random()}"
+            h.teamBName="Team ${(1000..10000).random()}"
+            historyRepository.addHistory(h)
+        }
 
         findViews(view)
 
