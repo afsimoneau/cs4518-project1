@@ -62,14 +62,14 @@ class ScoreFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
         val controller = TeamController(viewModel)
 
-        for (i in 0..150){
-            val h = History()
-            h.teamAScore=(0..50).random()
-            h.teamBScore=(0..50).random()
-            h.teamAName="Team ${(1000..10000).random()}"
-            h.teamBName="Team ${(1000..10000).random()}"
-            historyRepository.addHistory(h)
-        }
+//        for (i in 0..150){
+//            val h = History()
+//            h.teamAScore=(0..50).random()
+//            h.teamBScore=(0..50).random()
+//            h.teamAName="Team ${(1000..10000).random()}"
+//            h.teamBName="Team ${(1000..10000).random()}"
+//            historyRepository.addHistory(h)
+//        }
 
         findViews(view)
 
