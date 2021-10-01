@@ -2,37 +2,29 @@ package com.example.cs4518_project
 
 import kotlin.random.Random
 
-class TeamController(var teamViewModel: TeamViewModel, var view: MainActivity ) {
+class TeamController(var teamViewModel: TeamViewModel) {
     fun getScoreA(): Int {
-        return teamViewModel.ScoreA
+        return teamViewModel.teamAScore.value!!
     }
 
     fun getScoreB(): Int {
-        return teamViewModel.ScoreB
-    }
-
-    fun getTeamAName(): String {
-        return teamViewModel.TeamAName
-    }
-
-    fun getTeamBName(): String {
-        return teamViewModel.TeamBName
+        return teamViewModel.teamBScore.value!!
     }
 
     fun setScoreA(scoreA: Int) {
-        teamViewModel.ScoreA = scoreA
+        teamViewModel.teamAScore.value = scoreA
     }
 
     fun setScoreB(scoreB: Int) {
-        teamViewModel.ScoreB = scoreB
+        teamViewModel.teamBScore.value = scoreB
     }
 
     fun setTeamAName(nameA: String) {
-        teamViewModel.TeamAName = nameA
+        teamViewModel.teamAName.value = nameA
     }
 
     fun setTeamBName(nameB: String) {
-        teamViewModel.TeamBName = nameB
+        teamViewModel.teamBName.value = nameB
     }
 
     fun nameGenerator(): String {

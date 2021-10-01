@@ -1,30 +1,23 @@
 package com.example.cs4518_project
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
-import androidx.recyclerview.widget.RecyclerView
-import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import android.widget.EditText
-import android.widget.FrameLayout
-import androidx.fragment.app.commit
-import androidx.recyclerview.widget.LinearLayoutManager
+import java.util.*
+import kotlin.random.Random.Default.nextInt
 
 
 class ScoreFragment : Fragment() {
-    private lateinit var displayButton: Button
-    private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
+    private lateinit var historyButt: Button
     private lateinit var viewModel: TeamViewModel
     private lateinit var button3a: Button
     private lateinit var button3b: Button
@@ -37,84 +30,111 @@ class ScoreFragment : Fragment() {
     private lateinit var teamAScore: TextView
     private lateinit var teamAText: TextView
     private lateinit var teamBText: TextView
-    private lateinit var save: Button
+    private lateinit var saveButt: Button
 
+    private var historyRepository: HistoryRepository = HistoryRepository.get()
+
+    interface Callbacks {
+        fun onClickHistoryFromScore(teamAScore: Int, teamBScore: Int)
+        fun onClickSaveFromScore(historyId: UUID)
+    }
+
+    private var callbacks: Callbacks? = null
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        container?.removeAllViews()
         val view = inflater.inflate(R.layout.fragment_score, container, false)
-        viewModel = ViewModelProvider(this)[TeamViewModel::class.java]
-        val MainActivity = MainActivity()
-        val controller = TeamController(viewModel, MainActivity) //idk if i can just passin MainActivity like this...
-        val orientation = resources.configuration.orientation
-        /* if (orientation == 1) {
-            setContentView(MainActivity, R.layout.activity_main)
-        } else {
-            setContentView(MainActivity, R.layout.activity_landscape)
-        }
+        viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
+        val controller = TeamController(viewModel)
 
-        */
-        if (savedInstanceState != null) {
-            viewModel.TeamAName = savedInstanceState.getString("teamA").toString()
-            viewModel.TeamBName = savedInstanceState.getString("teamB").toString()
-        } else {
-            viewModel.TeamAName = "Team A"
-            viewModel.TeamBName = "Team B"
-        }
+//        for (i in 0..150){
+//            val h = History()
+//            h.teamAScore=(0..50).random()
+//            h.teamBScore=(0..50).random()
+//            h.teamAName="Team ${(1000..10000).random()}"
+//            h.teamBName="Team ${(1000..10000).random()}"
+//            historyRepository.addHistory(h)
+//        }
 
+        findViews(view)
+
+        setListeners(controller)
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
+
+        viewModel.teamAScore.observe(viewLifecycleOwner, {
+            teamAScore.text = it.toString()
+        })
+        viewModel.teamBScore.observe(viewLifecycleOwner, {
+            teamBScore.text = it.toString()
+        })
+        viewModel.teamAName.observe(viewLifecycleOwner, {
+            teamAText.text = it
+        })
+        viewModel.teamBName.observe(viewLifecycleOwner, {
+            teamBText.text = it
+        })
+    }
+
+    private fun findViews(view: View) {
         button3a = view.findViewById(R.id.button3a)
         button3b = view.findViewById(R.id.button3b)
         button2a = view.findViewById(R.id.button2a)
         button2b = view.findViewById(R.id.button2b)
-        freeThrowB = view.findViewById(R.id.FreeThrowB)
-        freeThrowA = view.findViewById(R.id.FreeThrowA)
-        resetButt = view.findViewById(R.id.ResetButt)
+        freeThrowB = view.findViewById(R.id.freeThrowB)
+        freeThrowA = view.findViewById(R.id.freeThrowA)
+        resetButt = view.findViewById(R.id.resetButt_score)
+        historyButt = view.findViewById(R.id.historyButt_score)
+        saveButt = view.findViewById(R.id.saveButt_score)
 
-        displayButton = view.findViewById(R.id.displayButton)
-        save = view.findViewById(R.id.Save)
-
-        displayButton.setOnClickListener {
-            Log.d("log", "buttonWorking")
-        }
-        save.setOnClickListener {
-            Log.d("log", "savebuttonWorking")
-
-        }
-        teamAScore = view.findViewById<TextView>(R.id.TeamAScore).apply {
-            text = viewModel.ScoreA.toString()
+        teamAScore = view.findViewById<TextView>(R.id.teamAScore).apply {
+            text = viewModel.teamAScore.value.toString()
         }
 
-        teamBScore = view.findViewById<TextView>(R.id.TeamBScore).apply {
-            text = viewModel.ScoreB.toString()
+        teamBScore = view.findViewById<TextView>(R.id.teamBScore).apply {
+            text = viewModel.teamBScore.value.toString()
         }
 
-        teamAText = view.findViewById<TextView>(R.id.TeamAText).apply {
-            text = viewModel.TeamAName
+        teamAText = view.findViewById<TextView>(R.id.teamAText).apply {
+            text = viewModel.teamAName.value
         }
 
-        teamBText = view.findViewById<TextView>(R.id.TeamBText).apply {
-            text = viewModel.TeamBName
+        teamBText = view.findViewById<TextView>(R.id.teamBText).apply {
+            text = viewModel.teamBName.value
         }
-
-        setListeners(controller )
-        return view
-
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int,data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode != Activity.RESULT_OK) {
-            Log.d("Error","Did not properly receive request")
+            Log.d("Error", "Did not properly receive request")
             return
         }
 
         if (requestCode == REQUEST) {
-            Log.d("Success","Back button clicked")
+            Log.d("Success", "Back button clicked")
 
         }
 
@@ -124,45 +144,47 @@ class ScoreFragment : Fragment() {
         button3a.setOnClickListener {
             val score: Int = controller.getScoreA() + 3
             controller.setScoreA(score)
-            teamAScore.text = viewModel.ScoreA.toString()
-            Log.d(viewModel.TeamAName, "+3 points")
+            teamAScore.text = viewModel.teamAScore.value.toString()
+            Log.d(viewModel.teamAName.value, "+3 points")
         }
         button2a.setOnClickListener {
             val score: Int = controller.getScoreA() + 2
             controller.setScoreA(score)
-            teamAScore.text = viewModel.ScoreA.toString()
-            Log.d(viewModel.TeamAName, "+2 points")
+            teamAScore.text = viewModel.teamAScore.value.toString()
+            Log.d(viewModel.teamAName.value, "+2 points")
 
         }
         freeThrowA.setOnClickListener {
             val score: Int = controller.getScoreA() + 1
             controller.setScoreA(score)
-            teamAScore.text = viewModel.ScoreA.toString()
-            Log.d(viewModel.TeamAName, "+1 point")
+            teamAScore.text = viewModel.teamAScore.value.toString()
+            Log.d(viewModel.teamAName.value, "+1 point")
 
         }
         button3b.setOnClickListener {
             val score: Int = controller.getScoreB() + 3
             controller.setScoreB(score)
-            teamBScore.text = viewModel.ScoreB.toString()
-            Log.d(viewModel.TeamBName, "+3 points")
+            teamBScore.text = viewModel.teamBScore.value.toString()
+            Log.d(viewModel.teamBName.value, "+3 points")
 
         }
         button2b.setOnClickListener {
             val score: Int = controller.getScoreB() + 2
             controller.setScoreB(score)
-            teamBScore.text = viewModel.ScoreB.toString()
-            Log.d(viewModel.TeamBName, "+2 points")
+            teamBScore.text = viewModel.teamBScore.value.toString()
+            Log.d(viewModel.teamBName.value, "+2 points")
 
         }
         freeThrowB.setOnClickListener {
             val score: Int = controller.getScoreB() + 1
             controller.setScoreB(score)
-            teamBScore.text = viewModel.ScoreB.toString()
-            Log.d(viewModel.TeamBName, "+1 point")
+            teamBScore.text = viewModel.teamBScore.value.toString()
+            Log.d(viewModel.teamBName.value, "+1 point")
 
         }
         resetButt.setOnClickListener {
+            Log.d(this::class.java.toString(), "ResetButt")
+
             controller.setScoreA(0)
             controller.setScoreB(0)
             controller.setTeamAName("Team A")
@@ -171,29 +193,45 @@ class ScoreFragment : Fragment() {
             teamBText.text = "Team B"
             teamAScore.text = "0"
             teamBScore.text = "0"
-            Log.d("ResetButt", "Reset button clicked")
+            viewModel.reset()
         }
-        save.setOnClickListener {
-            Log.d("log", "savebuttonWorking")
-            val intent = Intent(view?.context, ClickSave::class.java) //idk if this actually works
-            Log.d("log", "savebuttonWork2222ing")
+        saveButt.setOnClickListener {
+            Log.d(this::class.java.toString(), "SaveButt")
 
-            intent.putExtra(scoreA, viewModel.ScoreA.toString())
-            intent.putExtra(scoreB, viewModel.ScoreB.toString())
-            intent.putExtra(teamBName, viewModel.TeamBName)
-            intent.putExtra(teamAName, viewModel.TeamAName)
-            startActivity(intent)
+            val history = History(
+                teamAName = teamAText.text as String,
+                teamBName = teamBText.text as String,
+                teamAScore = Integer.parseInt(teamAScore.text as String),
+                teamBScore = Integer.parseInt(teamBScore.text as String)
+            )
+            historyRepository.addHistory(history)
+
+            callbacks?.onClickSaveFromScore(history.id)
+        }
+        historyButt.setOnClickListener {
+            Log.d(this::class.java.toString(), "HistoryButt")
+
+            val history = History(
+                teamAName = teamAText.text as String,
+                teamBName = teamBText.text as String,
+                teamAScore = Integer.parseInt(teamAScore.text as String),
+                teamBScore = Integer.parseInt(teamBScore.text as String)
+            )
+            historyRepository.addHistory(history)
+
+            callbacks?.onClickHistoryFromScore(
+                Integer.parseInt(teamAScore.text as String),
+                Integer.parseInt(teamBScore.text as String)
+            )
         }
     }
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString("teamA", viewModel.TeamAName)
-        outState.putString("teamB", viewModel.TeamBName)
-    }
-override fun onCreate(savedInstanceState: Bundle?) {
-super.onCreate(savedInstanceState)
 
+    companion object {
+        fun newInstance(): ScoreFragment {
+            return ScoreFragment()
+        }
     }
+
 }
 
 
