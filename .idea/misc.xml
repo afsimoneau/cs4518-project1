@@ -3,26 +3,26 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="../../../../../layout/custom_preview.xml" value="0.6318327974276527" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2796296296296296" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2796296296296296" />
         <entry key="app/src/main/res/layout/activity_click_save.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_landscape.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main_land.xml" value="0.35855263157894735" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.3223958333333333" />
+        <entry key="app/src/main/res/layout/activity_main_land.xml" value="0.24166666666666667" />
         <entry key="app/src/main/res/layout/activity_send_message.xml" value="0.1" />
         <entry key="app/src/main/res/layout/card_layout.xml" value="0.2212962962962963" />
         <entry key="app/src/main/res/layout/content_display.xml" value="0.1765625" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.17760416666666667" />
+        <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.24188123315845272" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.1887031408308004" />
-        <entry key="app/src/main/res/layout/fragment_history.xml" value="0.4588541666666667" />
-        <entry key="app/src/main/res/layout/fragment_score.xml" value="0.209375" />
+        <entry key="app/src/main/res/layout/fragment_history.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_score.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.21979166666666666" />
         <entry key="app/src/main/res/layout/images_main.xml" value="0.25092592592592594" />
         <entry key="app/src/main/res/layout/landscape.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/layout/list_item_history.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.36041666666666666" />
+        <entry key="app/src/main/res/xml/files.xml" value="0.3223958333333333" />
       </map>
     </option>
   </component>

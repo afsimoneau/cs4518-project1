@@ -1,7 +1,10 @@
 package com.example.cs4518_project
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.Button
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
@@ -75,6 +78,7 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks,DetailFr
             setContentView(R.layout.activity_main_land)
         }
 
+
         val target = intent.getStringExtra("TARGET_FRAGMENT")
         if (findViewById<FrameLayout>(R.id.fragment_container) != null) {
             val fragmentTransaction = fragmentManager.beginTransaction()
@@ -88,6 +92,7 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks,DetailFr
             fragmentTransaction.commit()
         }
     }
+
 
 
 }

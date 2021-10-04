@@ -3,7 +3,10 @@ package com.example.cs4518_project
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +15,22 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.StringBuilder
 import java.util.*
 import kotlin.random.Random.Default.nextInt
 
 
 class ScoreFragment : Fragment() {
+    val CITY: String = "dhaka,bd"
+    val API: String = "f193d421b69fc36dd7228f65061dfcb2"
+    val BASE_URL = "https://api.openweathermap.org/data/2.5/"
+
+
     private lateinit var historyButt: Button
     private lateinit var viewModel: TeamViewModel
     private lateinit var button3a: Button
@@ -31,6 +45,9 @@ class ScoreFragment : Fragment() {
     private lateinit var teamAText: TextView
     private lateinit var teamBText: TextView
     private lateinit var saveButt: Button
+    private lateinit var teamAChangePhoto:Button
+    private lateinit var weather:TextView
+
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
 
@@ -72,6 +89,8 @@ class ScoreFragment : Fragment() {
 //        }
 
         findViews(view)
+        getMyData()
+
 
         setListeners(controller)
 
@@ -80,6 +99,8 @@ class ScoreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
 
         viewModel.teamAScore.observe(viewLifecycleOwner, {
@@ -94,6 +115,7 @@ class ScoreFragment : Fragment() {
         viewModel.teamBName.observe(viewLifecycleOwner, {
             teamBText.text = it
         })
+
     }
 
     private fun findViews(view: View) {
@@ -106,6 +128,9 @@ class ScoreFragment : Fragment() {
         resetButt = view.findViewById(R.id.resetButt_score)
         historyButt = view.findViewById(R.id.historyButt_score)
         saveButt = view.findViewById(R.id.saveButt_score)
+
+        teamAChangePhoto = view.findViewById(R.id.teamAChangePhoto)
+        weather = view.findViewById(R.id.weather)
 
         teamAScore = view.findViewById<TextView>(R.id.teamAScore).apply {
             text = viewModel.teamAScore.value.toString()
@@ -141,6 +166,8 @@ class ScoreFragment : Fragment() {
     }
 
     private fun setListeners(controller: TeamController) {
+
+
         button3a.setOnClickListener {
             val score: Int = controller.getScoreA() + 3
             controller.setScoreA(score)
@@ -224,13 +251,51 @@ class ScoreFragment : Fragment() {
                 Integer.parseInt(teamBScore.text as String)
             )
         }
+
     }
+
+
 
     companion object {
         fun newInstance(): ScoreFragment {
             return ScoreFragment()
         }
     }
+
+    private fun getMyData() {
+        var retrofitBuilder = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .build()
+            .create(RetrofitInterface::class.java)
+
+        val retrofitData = retrofitBuilder.getData()
+
+        retrofitData.enqueue(object: Callback<WeatherData> {
+            override fun onResponse(
+                call: Call<WeatherData>, response: Response<WeatherData>
+            ) {
+                val responseBody = response.body()!!
+          //      val myStringBuilder = StringBuilder()
+          //      for (myData in response) {
+          //          myStringBuilder.append(myData.id)
+                    view?.findViewById(R.id.weather) as TextView
+                    weather.text = responseBody.toString()
+                }
+           // }
+
+            override fun onFailure(call: Call<WeatherData>, t: Throwable) {
+
+            }
+
+
+
+
+        }
+        )
+    }
+
+
 
 }
 

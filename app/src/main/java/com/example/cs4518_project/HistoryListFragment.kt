@@ -15,6 +15,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.StringBuilder
 import java.util.*
 
 
@@ -49,6 +55,7 @@ class HistoryListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        view?.findViewById(R.id.weather) as TextView
         historyListViewModel.historyLiveData = historyRepository.getHistoriesOfWinner(
             arguments?.getString("winning_team").toString()
         )
@@ -81,6 +88,8 @@ class HistoryListFragment : Fragment() {
         return view
 
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -159,4 +168,7 @@ class HistoryListFragment : Fragment() {
             return HistoryListFragment().apply { arguments = args }
         }
     }
+
+
+
 }

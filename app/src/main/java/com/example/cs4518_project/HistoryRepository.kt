@@ -3,6 +3,7 @@ package com.example.cs4518_project
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
+import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -15,9 +16,8 @@ class HistoryRepository private constructor(context: Context) {
         )
             .build()
     private val executor = Executors.newSingleThreadExecutor()
-
     private val historyDao = database.HistoryDao()
-
+    private val filesDir = context.applicationContext.filesDir
 
     fun getHistories(): LiveData<List<History>> = historyDao.getHistories()
 

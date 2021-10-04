@@ -10,4 +10,7 @@ data class History(
     var title: String = "", var date: Date = Date(),
     var teamAName: String = "", var teamBName: String = "",
     var teamBScore: Int = 0, var teamAScore: Int = 0
-)
+){
+    val photoFileName
+    get() = "IMG_$id.jpg"
+}
