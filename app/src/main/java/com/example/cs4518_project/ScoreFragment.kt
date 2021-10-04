@@ -77,31 +77,15 @@ class ScoreFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_score, container, false)
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
         val controller = TeamController(viewModel)
-
-//        for (i in 0..150){
-//            val h = History()
-//            h.teamAScore=(0..50).random()
-//            h.teamBScore=(0..50).random()
-//            h.teamAName="Team ${(1000..10000).random()}"
-//            h.teamBName="Team ${(1000..10000).random()}"
-//            historyRepository.addHistory(h)
-//        }
-
         findViews(view)
         getMyData()
-
-
         setListeners(controller)
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
-
         viewModel.teamAScore.observe(viewLifecycleOwner, {
             teamAScore.text = it.toString()
         })
@@ -114,7 +98,6 @@ class ScoreFragment : Fragment() {
         viewModel.teamBName.observe(viewLifecycleOwner, {
             teamBText.text = it
         })
-
     }
 
     private fun findViews(view: View) {
@@ -127,22 +110,17 @@ class ScoreFragment : Fragment() {
         resetButt = view.findViewById(R.id.resetButt_score)
         historyButt = view.findViewById(R.id.historyButt_score)
         saveButt = view.findViewById(R.id.saveButt_score)
-
         teamAChangePhoto = view.findViewById(R.id.teamAChangePhoto)
         weather = view.findViewById(R.id.weather)
-
         teamAScore = view.findViewById<TextView>(R.id.teamAScore).apply {
             text = viewModel.teamAScore.value.toString()
         }
-
         teamBScore = view.findViewById<TextView>(R.id.teamBScore).apply {
             text = viewModel.teamBScore.value.toString()
         }
-
         teamAText = view.findViewById<TextView>(R.id.teamAText).apply {
             text = viewModel.teamAName.value
         }
-
         teamBText = view.findViewById<TextView>(R.id.teamBText).apply {
             text = viewModel.teamBName.value
         }
@@ -151,22 +129,16 @@ class ScoreFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (resultCode != Activity.RESULT_OK) {
             Log.d("Error", "Did not properly receive request")
             return
         }
-
         if (requestCode == REQUEST) {
             Log.d("Success", "Back button clicked")
-
         }
-
     }
 
     private fun setListeners(controller: TeamController) {
-
-
         button3a.setOnClickListener {
             val score: Int = controller.getScoreA() + 3
             controller.setScoreA(score)
@@ -275,20 +247,20 @@ class ScoreFragment : Fragment() {
             override fun onResponse(
                 call: Call<WeatherData>, response: Response<WeatherData>
             ) {
-                val responseBody = response.body()?.weather.toString()
+                //val responseBody = response.body().toString()
                 var weatherReport = response.body()?.main?.temp
                 if (weatherReport != null) {
-                    newweatherReport = floor(((weatherReport - 273.15)* 9/5) + 32).toString()
+                    newweatherReport = (((weatherReport - 273.15)* 9/5) + 32).toInt().toString()
                 }
+                var city = response.body()?.name.toString()
 
                     view?.findViewById(R.id.weather) as TextView
-                weather.text = responseBody
 
-                //weather.text = "In Worcester, MA expect" + "an average temperature of " + newweatherReport + " degrees Farenheit"
+                    weather.text = "In the city of " +city + " the current weather is "+newweatherReport + "° Fahrenheit"
                 }
 
             override fun onFailure(call: Call<WeatherData>, t: Throwable) {
-
+                Log.d("Failure", "Did not reach")
             }
 
 
