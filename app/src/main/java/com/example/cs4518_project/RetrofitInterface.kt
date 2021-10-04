@@ -6,14 +6,7 @@ import retrofit2.http.Query
 
 interface RetrofitInterface {
 
-    @GET("forecast/?id=524901&appid=f193d421b69fc36dd7228f65061dfcb2")
-  //  @GET("posts")
-
-   // fun getData() : Call<List<Weather>>
+    @GET("weather?q=worcester&appid=f193d421b69fc36dd7228f65061dfcb2")
     fun getData() : Call<WeatherData>
-
-
-  //  fun listRepos(@Path("user") user: String?): Call<String?>?
-
 
 }

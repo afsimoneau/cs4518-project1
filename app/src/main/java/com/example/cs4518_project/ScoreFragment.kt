@@ -22,12 +22,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.StringBuilder
 import java.util.*
+import kotlin.math.floor
 import kotlin.random.Random.Default.nextInt
 
 
 class ScoreFragment : Fragment() {
-    val CITY: String = "dhaka,bd"
-    val API: String = "f193d421b69fc36dd7228f65061dfcb2"
     val BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
 
@@ -272,17 +271,21 @@ class ScoreFragment : Fragment() {
         val retrofitData = retrofitBuilder.getData()
 
         retrofitData.enqueue(object: Callback<WeatherData> {
+            var newweatherReport:String = ""
             override fun onResponse(
                 call: Call<WeatherData>, response: Response<WeatherData>
             ) {
-                val responseBody = response.body()!!
-          //      val myStringBuilder = StringBuilder()
-          //      for (myData in response) {
-          //          myStringBuilder.append(myData.id)
-                    view?.findViewById(R.id.weather) as TextView
-                    weather.text = responseBody.toString()
+                val responseBody = response.body()?.weather.toString()
+                var weatherReport = response.body()?.main?.temp
+                if (weatherReport != null) {
+                    newweatherReport = floor(((weatherReport - 273.15)* 9/5) + 32).toString()
                 }
-           // }
+
+                    view?.findViewById(R.id.weather) as TextView
+                weather.text = responseBody
+
+                //weather.text = "In Worcester, MA expect" + "an average temperature of " + newweatherReport + " degrees Farenheit"
+                }
 
             override fun onFailure(call: Call<WeatherData>, t: Throwable) {
 
