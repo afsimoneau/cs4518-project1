@@ -20,15 +20,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.StringBuilder
 import java.util.*
-import kotlin.math.floor
-import kotlin.random.Random.Default.nextInt
 
 
 class ScoreFragment : Fragment() {
-    val BASE_URL = "https://api.openweathermap.org/data/2.5/"
-
+    private val BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
     private lateinit var historyButt: Button
     private lateinit var viewModel: TeamViewModel
@@ -44,8 +40,11 @@ class ScoreFragment : Fragment() {
     private lateinit var teamAText: TextView
     private lateinit var teamBText: TextView
     private lateinit var saveButt: Button
-    private lateinit var teamAChangePhoto:Button
-    private lateinit var weather:TextView
+    private lateinit var teamAChangePhoto: Button
+    private lateinit var teamBChangePhoto: Button
+    private lateinit var weather: TextView
+    private lateinit var myHistory:History
+    private val packageManager: PackageManager = requireActivity().packageManager
 
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
@@ -77,6 +76,7 @@ class ScoreFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_score, container, false)
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
         val controller = TeamController(viewModel)
+        myHistory= History()
         findViews(view)
         getMyData()
         setListeners(controller)
@@ -110,7 +110,53 @@ class ScoreFragment : Fragment() {
         resetButt = view.findViewById(R.id.resetButt_score)
         historyButt = view.findViewById(R.id.historyButt_score)
         saveButt = view.findViewById(R.id.saveButt_score)
-        teamAChangePhoto = view.findViewById(R.id.teamAChangePhoto)
+        teamAChangePhoto = view.findViewById<Button>(R.id.teamAChangePhoto).apply {
+            val packageManager: PackageManager = requireActivity().packageManager
+            val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val resolvedActivity: ResolveInfo? =packageManager.resolveActivity(captureImage,
+                PackageManager.MATCH_DEFAULT_ONLY)
+            val photoUri = myHistory.teamAPhoto
+
+            setOnClickListener {
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+
+                val cameraActivities: List<ResolveInfo> =
+                    packageManager.queryIntentActivities(captureImage,
+                        PackageManager.MATCH_DEFAULT_ONLY)
+
+                for (cameraActivity in cameraActivities) {
+                    requireActivity().grantUriPermission(
+                        cameraActivity.activityInfo.packageName,
+                        photoUri,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                }
+                startActivityForResult(captureImage, 2)
+            }
+        }
+        teamBChangePhoto = view.findViewById<Button>(R.id.teamBChangePhoto).apply {
+            val packageManager: PackageManager = requireActivity().packageManager
+            val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val resolvedActivity: ResolveInfo? =packageManager.resolveActivity(captureImage,
+                PackageManager.MATCH_DEFAULT_ONLY)
+            val photoUri = myHistory.teamBPhoto
+
+            setOnClickListener {
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+
+                val cameraActivities: List<ResolveInfo> =
+                    packageManager.queryIntentActivities(captureImage,
+                        PackageManager.MATCH_DEFAULT_ONLY)
+
+                for (cameraActivity in cameraActivities) {
+                    requireActivity().grantUriPermission(
+                        cameraActivity.activityInfo.packageName,
+                        photoUri,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                }
+                startActivityForResult(captureImage, 2)
+            }
+        }
+
         weather = view.findViewById(R.id.weather)
         teamAScore = view.findViewById<TextView>(R.id.teamAScore).apply {
             text = viewModel.teamAScore.value.toString()
@@ -195,36 +241,50 @@ class ScoreFragment : Fragment() {
         }
         saveButt.setOnClickListener {
             Log.d(this::class.java.toString(), "SaveButt")
+            myHistory.teamAName = teamAText.text as String
+            myHistory.teamBName = teamBText.text as String
+            myHistory.teamAScore = Integer.parseInt(teamAScore.text as String)
+            myHistory.teamBScore = Integer.parseInt(teamBScore.text as String)
 
-            val history = History(
-                teamAName = teamAText.text as String,
-                teamBName = teamBText.text as String,
-                teamAScore = Integer.parseInt(teamAScore.text as String),
-                teamBScore = Integer.parseInt(teamBScore.text as String)
-            )
-            historyRepository.addHistory(history)
+            historyRepository.addHistory(myHistory)
 
-            callbacks?.onClickSaveFromScore(history.id)
+            callbacks?.onClickSaveFromScore(myHistory.id)
         }
         historyButt.setOnClickListener {
             Log.d(this::class.java.toString(), "HistoryButt")
 
-            val history = History(
-                teamAName = teamAText.text as String,
-                teamBName = teamBText.text as String,
-                teamAScore = Integer.parseInt(teamAScore.text as String),
-                teamBScore = Integer.parseInt(teamBScore.text as String)
-            )
-            historyRepository.addHistory(history)
+            myHistory.teamAName = teamAText.text as String
+            myHistory.teamBName = teamBText.text as String
+            myHistory.teamAScore = Integer.parseInt(teamAScore.text as String)
+            myHistory.teamBScore = Integer.parseInt(teamBScore.text as String)
+
+            historyRepository.addHistory(myHistory)
 
             callbacks?.onClickHistoryFromScore(
                 Integer.parseInt(teamAScore.text as String),
                 Integer.parseInt(teamBScore.text as String)
             )
         }
+        teamAChangePhoto.setOnClickListener {
+            Log.d("go duck yourself", "F.")
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (takePictureIntent.resolveActivity(packageManager) != null) {
+                startActivity(takePictureIntent)
+            } else {
+                Log.d("Camera:", "unable to load camera")
+            }
+        }
+        teamBChangePhoto.setOnClickListener {
+            Log.d("go duck yourself", "F.")
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (takePictureIntent.resolveActivity(packageManager) != null) {
+                startActivity(takePictureIntent)
+            } else {
+                Log.d("Camera:", "unable to load camera")
+            }
+        }
 
     }
-
 
 
     companion object {
@@ -234,7 +294,7 @@ class ScoreFragment : Fragment() {
     }
 
     private fun getMyData() {
-        var retrofitBuilder = Retrofit.Builder()
+        val retrofitBuilder = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(BASE_URL)
             .build()
@@ -242,37 +302,35 @@ class ScoreFragment : Fragment() {
 
         val retrofitData = retrofitBuilder.getData()
 
-        retrofitData.enqueue(object: Callback<WeatherData> {
-            var newweatherReport:String = ""
+        retrofitData.enqueue(object : Callback<WeatherData> {
+            var newweatherReport: String = ""
             override fun onResponse(
                 call: Call<WeatherData>, response: Response<WeatherData>
             ) {
                 //val responseBody = response.body().toString()
-                var weatherReport = response.body()?.main?.temp
+                val weatherReport = response.body()?.main?.temp
                 if (weatherReport != null) {
-                    newweatherReport = (((weatherReport - 273.15)* 9/5) + 32).toInt().toString()
+                    newweatherReport = (((weatherReport - 273.15) * 9 / 5) + 32).toInt().toString()
                 }
-                var city = response.body()?.name.toString()
+                val city = response.body()?.name.toString()
 
-                    view?.findViewById(R.id.weather) as TextView
+                view?.findViewById(R.id.weather) as TextView
 
-                    weather.text = "In the city of " +city + " the current weather is "+newweatherReport + "° Fahrenheit"
-                }
+                weather.text =
+                    "In the city of " + city + " the current weather is " + newweatherReport + "° Fahrenheit"
+            }
 
             override fun onFailure(call: Call<WeatherData>, t: Throwable) {
                 Log.d("Failure", "Did not reach")
             }
 
-
-
-
         }
         )
     }
 
-
-
 }
 
 
+/*
 
+ */

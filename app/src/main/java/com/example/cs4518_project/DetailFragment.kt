@@ -15,22 +15,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
-import java.lang.Exception
-import java.lang.StringBuilder
-import java.net.URL
+
 import java.util.*
+
 private const val REQUEST_CODE = 1
+
 class DetailFragment : Fragment() {
     private lateinit var teamBScore: TextView
     private lateinit var teamAScore: TextView
@@ -41,9 +32,7 @@ class DetailFragment : Fragment() {
     private lateinit var saveButt: Button
     private lateinit var history: History
     private lateinit var teamAPhoto: ImageView
-    private lateinit var teamAChangePhoto:Button
     private lateinit var weather: TextView
-    val packageManager: PackageManager = requireActivity().packageManager
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
 
@@ -70,18 +59,13 @@ class DetailFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("reached","reached")
+        Log.d("reached", "reached")
         super.onCreate(savedInstanceState)
         history = History()
         val historyId = arguments?.getSerializable("history_id") as UUID
         historyDetailViewModel.loadHistory(historyId)
 
     }
-
-
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -112,33 +96,6 @@ class DetailFragment : Fragment() {
     }
 
 
-
-            /*
-        teamAChangePhoto.apply {
-            val packageManager: PackageManager = requireActivity().packageManager
-            val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            val resolvedActivity: ResolveInfo? =packageManager.resolveActivity(captureImage,
-                PackageManager.MATCH_DEFAULT_ONLY)
-
-            setOnClickListener {
-                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-
-                val cameraActivities: List<ResolveInfo> =
-                    packageManager.queryIntentActivities(captureImage,
-                        PackageManager.MATCH_DEFAULT_ONLY)
-
-                for (cameraActivity in cameraActivities) {
-                    requireActivity().grantUriPermission(
-                        cameraActivity.activityInfo.packageName,
-                        photoUri,
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                }
-                startActivityForResult(captureImage, 2)
-            }
-          }
-             */
-
-
     private fun updateUI() {
         teamAText.text = history.teamAName
         teamBText.text = history.teamBName
@@ -164,21 +121,14 @@ class DetailFragment : Fragment() {
             historyDetailViewModel.loadHistory(history.id)
             updateUI()
         }
-        teamAChangePhoto.setOnClickListener{
-            Log.d("go duck yourself", "F.")
-            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if(takePictureIntent.resolveActivity(packageManager) != null) {
-                startActivity(takePictureIntent)
-            } else{
-                Log.d( "Camera:","unable to load camera")
-            }
-        }
+
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val takenImage = data?.extras?.get("data") as Bitmap
             teamAPhoto.setImageBitmap(takenImage)
-        } else{
+        } else {
             super.onActivityResult(requestCode, resultCode, data)
 
         }
@@ -193,7 +143,6 @@ class DetailFragment : Fragment() {
         historyButt = view.findViewById(R.id.historyButt_detail)
         saveButt = view.findViewById(R.id.saveButt_detail)
         resetButt = view.findViewById(R.id.resetButt_detail)
-        teamAChangePhoto = view.findViewById(R.id.teamAChangePhoto)
     }
 
     companion object {

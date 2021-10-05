@@ -16,10 +16,10 @@ interface HistoryDao {
     fun getHistory(id: UUID): LiveData<History>
 
     @Query("SELECT * FROM history WHERE teamAScore > teamBScore ")
-    fun getHistoriesOfTeamA():LiveData<List<History>>
+    fun getHistoriesOfTeamA(): LiveData<List<History>>
 
     @Query("SELECT * FROM history WHERE teamAScore < teamBScore ")
-    fun getHistoriesOfTeamB():LiveData<List<History>>
+    fun getHistoriesOfTeamB(): LiveData<List<History>>
 
     @Insert()
     fun addHistory(history: History?)

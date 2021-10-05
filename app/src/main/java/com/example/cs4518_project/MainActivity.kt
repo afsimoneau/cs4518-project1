@@ -1,10 +1,7 @@
 package com.example.cs4518_project
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
-import android.widget.Button
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
@@ -13,7 +10,8 @@ import java.util.*
 const val REQUEST = 1 // The request code
 
 
-class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks,DetailFragment.Callbacks,ScoreFragment.Callbacks {
+class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks, DetailFragment.Callbacks,
+    ScoreFragment.Callbacks {
     private val fragmentManager = supportFragmentManager
 
     override fun onSelectHistoryFromHistory(historyId: UUID) {
@@ -44,24 +42,22 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks,DetailFr
             .commit()
     }
 
-    override fun onClickHistoryFromScore(teamAScore:Int, teamBScore:Int) {
+    override fun onClickHistoryFromScore(teamAScore: Int, teamBScore: Int) {
         Log.d(this::class.java.toString(), "History from Score")
-        var winner:String
-        if (teamAScore>teamBScore){
-            winner="TEAM_A"
-        }
-        else if (teamAScore<teamBScore){
-            winner="TEAM_B"
-        }
-        else{
-            winner="DRAW"
+        var winner: String
+        if (teamAScore > teamBScore) {
+            winner = "TEAM_A"
+        } else if (teamAScore < teamBScore) {
+            winner = "TEAM_B"
+        } else {
+            winner = "DRAW"
         }
         val fragment = HistoryListFragment.newInstance(winner)
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
             .commit()
     }
 
-    override fun onClickSaveFromScore(historyId:UUID) {
+    override fun onClickSaveFromScore(historyId: UUID) {
         Log.d(this::class.java.toString(), "Save from Score")
         val fragment = DetailFragment.newInstance(historyId)
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
@@ -84,7 +80,10 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks,DetailFr
             val fragmentTransaction = fragmentManager.beginTransaction()
             when (target) {
                 "SCORE" -> fragmentTransaction.replace(R.id.fragment_container, ScoreFragment())
-                "HISTORY" -> fragmentTransaction.replace(R.id.fragment_container, HistoryListFragment())
+                "HISTORY" -> fragmentTransaction.replace(
+                    R.id.fragment_container,
+                    HistoryListFragment()
+                )
                 "DETAIL" -> fragmentTransaction.replace(R.id.fragment_container, DetailFragment())
                 else -> fragmentTransaction.replace(R.id.fragment_container, ScoreFragment())
             }
@@ -92,7 +91,6 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks,DetailFr
             fragmentTransaction.commit()
         }
     }
-
 
 
 }
