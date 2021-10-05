@@ -31,7 +31,6 @@ class DetailFragment : Fragment() {
     private lateinit var saveButt: Button
     private lateinit var history: History
     private lateinit var teamAPhoto: ImageView
-    private lateinit var weather: TextView
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
 

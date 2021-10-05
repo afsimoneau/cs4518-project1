@@ -10,7 +10,9 @@ data class History(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
     var title: String = "", var date: Date = Date(),
     var teamAName: String = "", var teamBName: String = "",
-    var teamBScore: Int = 0, var teamAScore: Int = 0,
-    var teamAPhoto: Uri = Uri.parse("IMG_$id-a.jpg"),
-    var teamBPhoto: Uri = Uri.parse("IMG_$id-b.jpg")
-)
+    var teamBScore: Int = 0, var teamAScore: Int = 0){
+    val teamAPhoto
+        get() = "IMG_$id-a.jpg"
+    val teamBPhoto
+        get() = "IMG_$id-b.jpg"
+}

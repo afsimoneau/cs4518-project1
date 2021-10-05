@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import retrofit2.Call
@@ -20,6 +22,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import java.util.*
 
 
@@ -44,6 +47,9 @@ class ScoreFragment : Fragment() {
     private lateinit var teamBChangePhoto: Button
     private lateinit var weather: TextView
     private lateinit var myHistory: History
+    private lateinit var teamAPhotoFile: File
+    private lateinit var teamBPhotoFile: File
+
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
 
@@ -99,6 +105,7 @@ class ScoreFragment : Fragment() {
         viewModel.teamBName.observe(viewLifecycleOwner, {
             teamBText.text = it
         })
+
     }
 
     private fun findViews(view: View) {
@@ -114,15 +121,9 @@ class ScoreFragment : Fragment() {
         teamAChangePhoto = view.findViewById<Button>(R.id.teamAChangePhoto).apply {
             val packageManager: PackageManager = requireActivity().packageManager
             val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            val resolvedActivity: ResolveInfo? = packageManager.resolveActivity(
-                captureImage,
-                PackageManager.MATCH_DEFAULT_ONLY
-            )
-            if (resolvedActivity == null) {
-                isEnabled = false
-            }
 
-            val photoUri = myHistory.teamAPhoto
+            teamAPhotoFile = historyRepository.getTeamAPhotoFile(myHistory)
+            val photoUri = FileProvider.getUriForFile(requireActivity(),"com.example.cs4518_project.fileprovider",teamAPhotoFile)
 
             setOnClickListener {
                 Log.d("photo button", "team A")
@@ -142,19 +143,15 @@ class ScoreFragment : Fragment() {
                     )
                 }
                 startActivityForResult(captureImage, PHOTO_A_REQUEST)
+
             }
         }
         teamBChangePhoto = view.findViewById<Button>(R.id.teamBChangePhoto).apply {
             val packageManager: PackageManager = requireActivity().packageManager
             val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            val resolvedActivity: ResolveInfo? = packageManager.resolveActivity(
-                captureImage,
-                PackageManager.MATCH_DEFAULT_ONLY
-            )
-            if (resolvedActivity == null) {
-                isEnabled = false
-            }
-            val photoUri = myHistory.teamBPhoto
+
+            teamBPhotoFile = historyRepository.getTeamBPhotoFile(myHistory)
+            val photoUri = FileProvider.getUriForFile(requireActivity(),"com.example.cs4518_project.fileprovider",teamBPhotoFile)
 
             setOnClickListener {
                 Log.d("photo button", "team B")
@@ -203,8 +200,10 @@ class ScoreFragment : Fragment() {
                 Log.d("Success", "Back button clicked")
             } else if (requestCode == PHOTO_A_REQUEST) {
                 Log.d(this::class.java.toString(), "activity result team A")
+
             } else if (requestCode == PHOTO_B_REQUEST) {
                 Log.d(this::class.java.toString(), "activity result team B")
+
             }
         }
 

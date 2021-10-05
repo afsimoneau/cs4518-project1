@@ -1,9 +1,14 @@
 package com.example.cs4518_project
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import java.util.*
 
 
@@ -64,6 +69,7 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks, DetailF
             .commit()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val orientation = resources.configuration.orientation
@@ -72,6 +78,21 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks, DetailF
         } else {
             setContentView(R.layout.activity_main_land)
         }
+
+        if (
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // You can directly ask for the permission.
+            // The registered ActivityResultCallback gets the result of this request.
+            requestPermissions(
+                arrayOf(Manifest.permission.CAMERA),
+                2
+            )
+        }
+
 
         val target = intent.getStringExtra("TARGET_FRAGMENT")
         if (findViewById<FrameLayout>(R.id.fragment_container) != null) {

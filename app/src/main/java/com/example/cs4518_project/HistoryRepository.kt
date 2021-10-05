@@ -32,7 +32,6 @@ class HistoryRepository private constructor(context: Context) {
 
     fun getHistory(historyId: UUID): LiveData<History> = historyDao.getHistory(historyId)
 
-
     fun addHistory(history: History) {
         executor.execute {
             historyDao.addHistory(history)
@@ -44,6 +43,10 @@ class HistoryRepository private constructor(context: Context) {
             historyDao.updateHistory(history)
         }
     }
+
+    fun getTeamAPhotoFile(history: History): File = File(filesDir, history.teamAPhoto)
+    fun getTeamBPhotoFile(history: History): File = File(filesDir, history.teamBPhoto)
+
 
 
     companion object {
