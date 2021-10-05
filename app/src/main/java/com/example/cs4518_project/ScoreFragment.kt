@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Point
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -49,6 +53,9 @@ class ScoreFragment : Fragment() {
     private lateinit var myHistory: History
     private lateinit var teamAPhotoFile: File
     private lateinit var teamBPhotoFile: File
+    private lateinit var teamAPhoto: ImageView
+    private lateinit var teamBPhoto: ImageView
+
 
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
@@ -118,6 +125,9 @@ class ScoreFragment : Fragment() {
         resetButt = view.findViewById(R.id.resetButt_score)
         historyButt = view.findViewById(R.id.historyButt_score)
         saveButt = view.findViewById(R.id.saveButt_score)
+        teamAPhoto = view.findViewById(R.id.teamAPhoto)
+        teamBPhoto = view.findViewById(R.id.teamBPhoto)
+
         teamAChangePhoto = view.findViewById<Button>(R.id.teamAChangePhoto).apply {
             val packageManager: PackageManager = requireActivity().packageManager
             val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -143,6 +153,8 @@ class ScoreFragment : Fragment() {
                     )
                 }
                 startActivityForResult(captureImage, PHOTO_A_REQUEST)
+                updateAPhotoView()
+
 
             }
         }
@@ -171,6 +183,8 @@ class ScoreFragment : Fragment() {
                     )
                 }
                 startActivityForResult(captureImage, PHOTO_B_REQUEST)
+                updateBPhotoView()
+
             }
         }
 
@@ -189,7 +203,6 @@ class ScoreFragment : Fragment() {
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != Activity.RESULT_OK) {
@@ -200,13 +213,17 @@ class ScoreFragment : Fragment() {
                 Log.d("Success", "Back button clicked")
             } else if (requestCode == PHOTO_A_REQUEST) {
                 Log.d(this::class.java.toString(), "activity result team A")
+                updateAPhotoView()
 
             } else if (requestCode == PHOTO_B_REQUEST) {
                 Log.d(this::class.java.toString(), "activity result team B")
+                updateBPhotoView()
+            }
+            else{
+                Log.d(this::class.java.toString(), "none")
 
             }
         }
-
     }
 
     private fun setListeners(controller: TeamController) {
@@ -297,6 +314,24 @@ class ScoreFragment : Fragment() {
             return ScoreFragment()
         }
     }
+    private fun updateAPhotoView() {
+        if (teamAPhotoFile.exists()) {
+            val bitmap = getScaledBitmap(teamAPhotoFile.path, requireActivity())
+            teamAPhoto.setImageBitmap(bitmap)
+        }
+        else{
+            teamAPhoto.setImageDrawable(null)
+ }
+    }
+    private fun updateBPhotoView() {
+        if (teamBPhotoFile.exists()) {
+            val bitmap = getScaledBitmap(teamBPhotoFile.path, requireActivity())
+            teamBPhoto.setImageBitmap(bitmap)
+        }
+        else{
+            teamAPhoto.setImageBitmap(null)
+        }
+    }
 
     private fun getMyData() {
         val retrofitBuilder = Retrofit.Builder()
@@ -324,18 +359,46 @@ class ScoreFragment : Fragment() {
                 weather.text =
                     "In the city of " + city + " the current weather is " + newweatherReport + "° Fahrenheit"
             }
-
             override fun onFailure(call: Call<WeatherData>, t: Throwable) {
                 Log.d("Failure", "Did not reach")
-            }
-
-        }
+                }
+           }
         )
     }
 
+    fun getScaledBitmap(path: String, activity: Activity): Bitmap {
+        val size = Point()
+        activity.windowManager.defaultDisplay.getSize(size)
+
+        return getScaledBitmap(path, size.x, size.y)
+    }
+    fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap {
+        // Read in the dimensions of the image on disk
+        var options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(path, options)
+
+        val srcWidth = options.outWidth.toFloat()
+        val srcHeight = options.outHeight.toFloat()
+
+        // Figure out how much to scale down by
+        var inSampleSize = 1
+        if (srcHeight > destHeight || srcWidth > destWidth) {
+            val heightScale = srcHeight / destHeight
+            val widthScale = srcWidth / destWidth
+
+            val sampleScale = if (heightScale > widthScale) {
+                heightScale
+            } else {
+                widthScale
+            }
+            inSampleSize = Math.round(sampleScale)
+        }
+
+        options = BitmapFactory.Options()
+        options.inSampleSize = inSampleSize
+
+        // Read in and create final bitmap
+        return BitmapFactory.decodeFile(path, options)
+    }
 }
-
-
-/*
-
- */

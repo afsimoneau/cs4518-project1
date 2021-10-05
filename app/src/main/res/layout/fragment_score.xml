@@ -27,10 +27,11 @@
 
     <TextView
         android:id="@+id/weather"
-        android:layout_width="match_parent"
-        android:layout_height="254dp"
+        android:layout_width="338dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="4dp"
-        android:layout_weight="150"
+        android:layout_weight="10"
         android:text="TextView"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent" />
