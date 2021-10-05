@@ -129,7 +129,6 @@ class DetailFragment : Fragment() {
             teamAPhoto.setImageBitmap(takenImage)
         } else {
             super.onActivityResult(requestCode, resultCode, data)
-
         }
     }
 

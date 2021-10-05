@@ -47,6 +47,9 @@ class ScoreFragment : Fragment() {
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
 
+    val PHOTO_A_REQUEST = 97
+    val PHOTO_B_REQUEST = 98
+
     interface Callbacks {
         fun onClickHistoryFromScore(teamAScore: Int, teamBScore: Int)
         fun onClickSaveFromScore(historyId: UUID)
@@ -122,6 +125,7 @@ class ScoreFragment : Fragment() {
             val photoUri = myHistory.teamAPhoto
 
             setOnClickListener {
+                Log.d("photo button", "team A")
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
 
                 val cameraActivities: List<ResolveInfo> =
@@ -137,7 +141,7 @@ class ScoreFragment : Fragment() {
                         Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                     )
                 }
-                startActivityForResult(captureImage, 2)
+                startActivityForResult(captureImage, PHOTO_A_REQUEST)
             }
         }
         teamBChangePhoto = view.findViewById<Button>(R.id.teamBChangePhoto).apply {
@@ -153,6 +157,7 @@ class ScoreFragment : Fragment() {
             val photoUri = myHistory.teamBPhoto
 
             setOnClickListener {
+                Log.d("photo button", "team B")
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
 
                 val cameraActivities: List<ResolveInfo> =
@@ -168,7 +173,7 @@ class ScoreFragment : Fragment() {
                         Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                     )
                 }
-                startActivityForResult(captureImage, 2)
+                startActivityForResult(captureImage, PHOTO_B_REQUEST)
             }
         }
 
@@ -193,13 +198,16 @@ class ScoreFragment : Fragment() {
         if (resultCode != Activity.RESULT_OK) {
             Log.d("Error", "Did not properly receive request")
             return
+        } else {
+            if (requestCode == REQUEST) {
+                Log.d("Success", "Back button clicked")
+            } else if (requestCode == PHOTO_A_REQUEST) {
+                Log.d(this::class.java.toString(), "activity result team A")
+            } else if (requestCode == PHOTO_B_REQUEST) {
+                Log.d(this::class.java.toString(), "activity result team B")
+            }
         }
-        if (requestCode == REQUEST) {
-            Log.d("Success", "Back button clicked")
-        }
-        if (requestCode == 2) {
-            Log.d("Success", "Photo button clicked")
-        }
+
     }
 
     private fun setListeners(controller: TeamController) {
