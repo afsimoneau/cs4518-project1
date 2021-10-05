@@ -43,9 +43,7 @@ class ScoreFragment : Fragment() {
     private lateinit var teamAChangePhoto: Button
     private lateinit var teamBChangePhoto: Button
     private lateinit var weather: TextView
-    private lateinit var myHistory:History
-    private val packageManager: PackageManager = requireActivity().packageManager
-
+    private lateinit var myHistory: History
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
 
@@ -76,7 +74,7 @@ class ScoreFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_score, container, false)
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
         val controller = TeamController(viewModel)
-        myHistory= History()
+        myHistory = History()
         findViews(view)
         getMyData()
         setListeners(controller)
@@ -113,22 +111,31 @@ class ScoreFragment : Fragment() {
         teamAChangePhoto = view.findViewById<Button>(R.id.teamAChangePhoto).apply {
             val packageManager: PackageManager = requireActivity().packageManager
             val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            val resolvedActivity: ResolveInfo? =packageManager.resolveActivity(captureImage,
-                PackageManager.MATCH_DEFAULT_ONLY)
+            val resolvedActivity: ResolveInfo? = packageManager.resolveActivity(
+                captureImage,
+                PackageManager.MATCH_DEFAULT_ONLY
+            )
+            if (resolvedActivity == null) {
+                isEnabled = false
+            }
+
             val photoUri = myHistory.teamAPhoto
 
             setOnClickListener {
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
 
                 val cameraActivities: List<ResolveInfo> =
-                    packageManager.queryIntentActivities(captureImage,
-                        PackageManager.MATCH_DEFAULT_ONLY)
+                    packageManager.queryIntentActivities(
+                        captureImage,
+                        PackageManager.MATCH_DEFAULT_ONLY
+                    )
 
                 for (cameraActivity in cameraActivities) {
                     requireActivity().grantUriPermission(
                         cameraActivity.activityInfo.packageName,
                         photoUri,
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
                 }
                 startActivityForResult(captureImage, 2)
             }
@@ -136,22 +143,30 @@ class ScoreFragment : Fragment() {
         teamBChangePhoto = view.findViewById<Button>(R.id.teamBChangePhoto).apply {
             val packageManager: PackageManager = requireActivity().packageManager
             val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            val resolvedActivity: ResolveInfo? =packageManager.resolveActivity(captureImage,
-                PackageManager.MATCH_DEFAULT_ONLY)
+            val resolvedActivity: ResolveInfo? = packageManager.resolveActivity(
+                captureImage,
+                PackageManager.MATCH_DEFAULT_ONLY
+            )
+            if (resolvedActivity == null) {
+                isEnabled = false
+            }
             val photoUri = myHistory.teamBPhoto
 
             setOnClickListener {
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
 
                 val cameraActivities: List<ResolveInfo> =
-                    packageManager.queryIntentActivities(captureImage,
-                        PackageManager.MATCH_DEFAULT_ONLY)
+                    packageManager.queryIntentActivities(
+                        captureImage,
+                        PackageManager.MATCH_DEFAULT_ONLY
+                    )
 
                 for (cameraActivity in cameraActivities) {
                     requireActivity().grantUriPermission(
                         cameraActivity.activityInfo.packageName,
                         photoUri,
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
                 }
                 startActivityForResult(captureImage, 2)
             }
@@ -181,6 +196,9 @@ class ScoreFragment : Fragment() {
         }
         if (requestCode == REQUEST) {
             Log.d("Success", "Back button clicked")
+        }
+        if (requestCode == 2) {
+            Log.d("Success", "Photo button clicked")
         }
     }
 
@@ -265,27 +283,7 @@ class ScoreFragment : Fragment() {
                 Integer.parseInt(teamBScore.text as String)
             )
         }
-        teamAChangePhoto.setOnClickListener {
-            Log.d("go duck yourself", "F.")
-            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (takePictureIntent.resolveActivity(packageManager) != null) {
-                startActivity(takePictureIntent)
-            } else {
-                Log.d("Camera:", "unable to load camera")
-            }
-        }
-        teamBChangePhoto.setOnClickListener {
-            Log.d("go duck yourself", "F.")
-            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (takePictureIntent.resolveActivity(packageManager) != null) {
-                startActivity(takePictureIntent)
-            } else {
-                Log.d("Camera:", "unable to load camera")
-            }
-        }
-
     }
-
 
     companion object {
         fun newInstance(): ScoreFragment {

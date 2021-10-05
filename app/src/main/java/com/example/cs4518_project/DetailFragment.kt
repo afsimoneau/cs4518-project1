@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -139,7 +138,6 @@ class DetailFragment : Fragment() {
         teamBScore = view.findViewById(R.id.teamBScore)
         teamAText = view.findViewById(R.id.teamAText)
         teamBText = view.findViewById(R.id.teamBText)
-        weather = view.findViewById(R.id.weather)
         historyButt = view.findViewById(R.id.historyButt_detail)
         saveButt = view.findViewById(R.id.saveButt_detail)
         resetButt = view.findViewById(R.id.resetButt_detail)

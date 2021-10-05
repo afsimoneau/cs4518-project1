@@ -55,7 +55,6 @@ class HistoryListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        view?.findViewById(R.id.weather) as TextView
         historyListViewModel.historyLiveData = historyRepository.getHistoriesOfWinner(
             arguments?.getString("winning_team").toString()
         )

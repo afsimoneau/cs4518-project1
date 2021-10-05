@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks, DetailF
             .commit()
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val orientation = resources.configuration.orientation
@@ -73,7 +72,6 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks, DetailF
         } else {
             setContentView(R.layout.activity_main_land)
         }
-
 
         val target = intent.getStringExtra("TARGET_FRAGMENT")
         if (findViewById<FrameLayout>(R.id.fragment_container) != null) {
@@ -91,6 +89,4 @@ class MainActivity : AppCompatActivity(), HistoryListFragment.Callbacks, DetailF
             fragmentTransaction.commit()
         }
     }
-
-
 }
