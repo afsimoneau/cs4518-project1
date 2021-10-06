@@ -455,8 +455,11 @@ class ScoreFragment : Fragment() {
             }
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
-                lat = location.latitude
-                lon = location.longitude
+                if (location!=null){
+                    lat = location.latitude
+                    lon = location.longitude
+                }
+
                 // use your location object
                 // get latitude , longitude and other info from this
 
