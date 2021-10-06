@@ -6,7 +6,7 @@ import retrofit2.http.Query
 
 interface RetrofitInterface {
 
-    @GET("weather?q=worcester&appid=f193d421b69fc36dd7228f65061dfcb2")
-    fun getData() : Call<WeatherData>
+    @GET("weather")
+    fun getData(@Query("lat") lat:Double, @Query("lon") lon:Double, @Query("appid") appid:String) : Call<WeatherData>
 
 }

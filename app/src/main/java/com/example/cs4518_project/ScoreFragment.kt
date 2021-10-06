@@ -1,5 +1,7 @@
 package com.example.cs4518_project
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -8,7 +10,7 @@ import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Point
-import android.net.Uri
+import android.location.Location
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -18,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +31,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.*
+
+import android.os.Looper
+import com.google.android.gms.location.*
+import androidx.annotation.NonNull
+
+import com.google.android.gms.tasks.OnCompleteListener
+
+
+
 
 
 class ScoreFragment : Fragment() {
@@ -56,12 +68,18 @@ class ScoreFragment : Fragment() {
     private lateinit var teamAPhoto: ImageView
     private lateinit var teamBPhoto: ImageView
 
+    private var lat: Double = 0.0
+    private var lon: Double = 0.0
 
+    private val appid: String = "f193d421b69fc36dd7228f65061dfcb2"
 
     private var historyRepository: HistoryRepository = HistoryRepository.get()
 
     val PHOTO_A_REQUEST = 97
     val PHOTO_B_REQUEST = 98
+
+    private lateinit var fusedLocationClient:FusedLocationProviderClient
+
 
     interface Callbacks {
         fun onClickHistoryFromScore(teamAScore: Int, teamBScore: Int)
@@ -91,8 +109,10 @@ class ScoreFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
         val controller = TeamController(viewModel)
         myHistory = History()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.requireActivity())
+
         findViews(view)
-        getMyData()
+        getWeatherData()
         setListeners(controller)
         return view
     }
@@ -133,7 +153,11 @@ class ScoreFragment : Fragment() {
             val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
             teamAPhotoFile = historyRepository.getTeamAPhotoFile(myHistory)
-            val photoUri = FileProvider.getUriForFile(requireActivity(),"com.example.cs4518_project.fileprovider",teamAPhotoFile)
+            val photoUri = FileProvider.getUriForFile(
+                requireActivity(),
+                "com.example.cs4518_project.fileprovider",
+                teamAPhotoFile
+            )
 
             setOnClickListener {
                 Log.d("photo button", "team A")
@@ -163,7 +187,11 @@ class ScoreFragment : Fragment() {
             val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
             teamBPhotoFile = historyRepository.getTeamBPhotoFile(myHistory)
-            val photoUri = FileProvider.getUriForFile(requireActivity(),"com.example.cs4518_project.fileprovider",teamBPhotoFile)
+            val photoUri = FileProvider.getUriForFile(
+                requireActivity(),
+                "com.example.cs4518_project.fileprovider",
+                teamBPhotoFile
+            )
 
             setOnClickListener {
                 Log.d("photo button", "team B")
@@ -218,8 +246,7 @@ class ScoreFragment : Fragment() {
             } else if (requestCode == PHOTO_B_REQUEST) {
                 Log.d(this::class.java.toString(), "activity result team B")
                 updateBPhotoView()
-            }
-            else{
+            } else {
                 Log.d(this::class.java.toString(), "none")
 
             }
@@ -314,64 +341,69 @@ class ScoreFragment : Fragment() {
             return ScoreFragment()
         }
     }
+
     private fun updateAPhotoView() {
         if (teamAPhotoFile.exists()) {
             val bitmap = getScaledBitmap(teamAPhotoFile.path, requireActivity())
             teamAPhoto.setImageBitmap(bitmap)
-        }
-        else{
+        } else {
             teamAPhoto.setImageDrawable(null)
- }
+        }
     }
+
     private fun updateBPhotoView() {
         if (teamBPhotoFile.exists()) {
             val bitmap = getScaledBitmap(teamBPhotoFile.path, requireActivity())
             teamBPhoto.setImageBitmap(bitmap)
-        }
-        else{
+        } else {
             teamAPhoto.setImageBitmap(null)
         }
     }
 
-    private fun getMyData() {
+    private fun getWeatherData() {
         val retrofitBuilder = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(BASE_URL)
             .build()
             .create(RetrofitInterface::class.java)
 
-        val retrofitData = retrofitBuilder.getData()
+        getLastKnownLocation()
+
+        val retrofitData = retrofitBuilder.getData(lat, lon, appid)
 
         retrofitData.enqueue(object : Callback<WeatherData> {
-            var newweatherReport: String = ""
+            var newWeatherReport: String = ""
+            @SuppressLint("SetTextI18n")
             override fun onResponse(
                 call: Call<WeatherData>, response: Response<WeatherData>
             ) {
                 //val responseBody = response.body().toString()
                 val weatherReport = response.body()?.main?.temp
                 if (weatherReport != null) {
-                    newweatherReport = (((weatherReport - 273.15) * 9 / 5) + 32).toInt().toString()
+                    newWeatherReport = (((weatherReport - 273.15) * 9 / 5) + 32).toInt().toString()
                 }
                 val city = response.body()?.name.toString()
 
                 view?.findViewById(R.id.weather) as TextView
 
                 weather.text =
-                    "In the city of " + city + " the current weather is " + newweatherReport + "° Fahrenheit"
+                    "The current weather is ${newWeatherReport}° Fahrenheit at $lat degrees latitude and $lon degrees longitude"
             }
+
             override fun onFailure(call: Call<WeatherData>, t: Throwable) {
                 Log.d("Failure", "Did not reach")
-                }
-           }
+            }
+        }
         )
     }
 
-    fun getScaledBitmap(path: String, activity: Activity): Bitmap {
+    private fun getScaledBitmap(path: String, activity: Activity): Bitmap {
         val size = Point()
         activity.windowManager.defaultDisplay.getSize(size)
 
         return getScaledBitmap(path, size.x, size.y)
     }
+
     fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap {
         // Read in the dimensions of the image on disk
         var options = BitmapFactory.Options()
@@ -400,5 +432,73 @@ class ScoreFragment : Fragment() {
 
         // Read in and create final bitmap
         return BitmapFactory.decodeFile(path, options)
+    }
+
+    private fun getLastKnownLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.d("locations not enabled", "problems")
+
+            return
+        }
+        fusedLocationClient.lastLocation
+            .addOnCompleteListener { task ->
+                val location = task.result
+                if (location == null) {
+                    requestNewLocationData()
+                } else {
+                    lat = location.latitude
+                    lon = location.longitude
+                }
+            }
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    lat = location.latitude
+                    lon = location.longitude
+                    // use your location object
+                    // get latitude , longitude and other info from this
+                }
+
+            }
+
+    }
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+
+        // Initializing LocationRequest
+        // object with appropriate methods
+        val mLocationRequest :LocationRequest = LocationRequest()
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest.interval = 5
+        mLocationRequest.fastestInterval = 0
+        mLocationRequest.numUpdates = 1
+
+        // setting LocationRequest
+        // on FusedLocationClient
+        fusedLocationClient.requestLocationUpdates(
+            mLocationRequest,
+            locationCallback,
+            Looper.myLooper()
+        )
+    }
+
+    private val locationCallback: LocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val lastLocation: Location = locationResult.lastLocation
+            lat = lastLocation.latitude
+            lon = lastLocation.longitude
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requestNewLocationData()
     }
 }
