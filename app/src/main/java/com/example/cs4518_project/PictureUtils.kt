@@ -12,6 +12,7 @@ class PictureUtils {
 
         return getScaledBitmap(path, size.x, size.y)
     }
+
     fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap {
         // Read in the dimensions of the image on disk
         var options = BitmapFactory.Options()

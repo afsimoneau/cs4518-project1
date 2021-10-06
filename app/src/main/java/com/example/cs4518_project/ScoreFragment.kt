@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Point
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,15 +33,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.util.*
-
-import android.os.Looper
-import com.google.android.gms.location.*
-import androidx.annotation.NonNull
-
-import com.google.android.gms.tasks.OnCompleteListener
-
-
-
 
 
 class ScoreFragment : Fragment() {
@@ -78,7 +71,7 @@ class ScoreFragment : Fragment() {
     val PHOTO_A_REQUEST = 97
     val PHOTO_B_REQUEST = 98
 
-    private lateinit var fusedLocationClient:FusedLocationProviderClient
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 
     interface Callbacks {
@@ -109,8 +102,9 @@ class ScoreFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity()).get(TeamViewModel::class.java)
         val controller = TeamController(viewModel)
         myHistory = History()
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.requireActivity())
-
+        fusedLocationClient =
+            LocationServices.getFusedLocationProviderClient(this.requireActivity())
+        requestNewLocationData()
         findViews(view)
         getWeatherData()
         setListeners(controller)
@@ -373,10 +367,12 @@ class ScoreFragment : Fragment() {
 
         retrofitData.enqueue(object : Callback<WeatherData> {
             var newWeatherReport: String = ""
+
             @SuppressLint("SetTextI18n")
             override fun onResponse(
                 call: Call<WeatherData>, response: Response<WeatherData>
             ) {
+                Log.d("weatherreport", response.body().toString())
                 val weatherReport = response.body()?.main?.temp
                 if (weatherReport != null) {
                     newWeatherReport = (((weatherReport - 273.15) * 9 / 5) + 32).toInt().toString()
@@ -459,22 +455,21 @@ class ScoreFragment : Fragment() {
             }
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
-                if (location != null) {
-                    lat = location.latitude
-                    lon = location.longitude
-                    // use your location object
-                    // get latitude , longitude and other info from this
-                }
+                lat = location.latitude
+                lon = location.longitude
+                // use your location object
+                // get latitude , longitude and other info from this
 
             }
 
     }
+
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
 
         // Initializing LocationRequest
         // object with appropriate methods
-        val mLocationRequest :LocationRequest = LocationRequest()
+        val mLocationRequest: LocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         mLocationRequest.interval = 5
         mLocationRequest.fastestInterval = 0

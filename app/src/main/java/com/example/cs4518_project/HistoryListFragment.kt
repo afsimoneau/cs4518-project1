@@ -15,12 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.StringBuilder
 import java.util.*
 
 
@@ -89,7 +83,6 @@ class HistoryListFragment : Fragment() {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         historyListViewModel.historyLiveData.observe(viewLifecycleOwner, { histories ->
@@ -115,7 +108,8 @@ class HistoryListFragment : Fragment() {
         @SuppressLint("SetTextI18n")
         fun bind(history: History) {
             this.history = history
-            titleTextView.text = "${this.history.title} | ${history.teamAName} vs ${history.teamBName} | ${history.teamAScore}:${history.teamBScore}"
+            titleTextView.text =
+                "${this.history.title} | ${history.teamAName} vs ${history.teamBName} | ${history.teamAScore}:${history.teamBScore}"
             dateTextView.text = this.history.date.toString()
             when {
                 history.teamAScore > history.teamBScore -> {
@@ -167,7 +161,5 @@ class HistoryListFragment : Fragment() {
             return HistoryListFragment().apply { arguments = args }
         }
     }
-
-
 
 }

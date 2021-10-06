@@ -21,10 +21,10 @@ class HistoryRepository private constructor(context: Context) {
 
     fun getHistories(): LiveData<List<History>> = historyDao.getHistories()
 
-    fun getHistoriesOfWinner(winner:String): LiveData<List<History>> {
-        when (winner){
-            "TEAM_A"->return historyDao.getHistoriesOfTeamA()
-            "TEAM_B"->return historyDao.getHistoriesOfTeamB()
+    fun getHistoriesOfWinner(winner: String): LiveData<List<History>> {
+        when (winner) {
+            "TEAM_A" -> return historyDao.getHistoriesOfTeamA()
+            "TEAM_B" -> return historyDao.getHistoriesOfTeamB()
             else -> return historyDao.getHistories()
         }
     }
@@ -46,7 +46,6 @@ class HistoryRepository private constructor(context: Context) {
 
     fun getTeamAPhotoFile(history: History): File = File(filesDir, history.teamAPhoto)
     fun getTeamBPhotoFile(history: History): File = File(filesDir, history.teamBPhoto)
-
 
 
     companion object {
