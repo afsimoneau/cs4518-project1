@@ -377,17 +377,17 @@ class ScoreFragment : Fragment() {
             override fun onResponse(
                 call: Call<WeatherData>, response: Response<WeatherData>
             ) {
-                //val responseBody = response.body().toString()
                 val weatherReport = response.body()?.main?.temp
                 if (weatherReport != null) {
                     newWeatherReport = (((weatherReport - 273.15) * 9 / 5) + 32).toInt().toString()
                 }
-                val city = response.body()?.name.toString()
+                val city = response.body()?.name
+
 
                 view?.findViewById(R.id.weather) as TextView
 
                 weather.text =
-                    "The current weather is ${newWeatherReport}° Fahrenheit at $lat degrees latitude and $lon degrees longitude"
+                    "The current weather is ${newWeatherReport}° Fahrenheit at $lat degrees latitude and $lon degrees longitude which is $city"
             }
 
             override fun onFailure(call: Call<WeatherData>, t: Throwable) {
